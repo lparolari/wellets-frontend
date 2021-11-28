@@ -16,19 +16,25 @@ const Balance: React.FC<IProps> = ({
   maximumFractionDigits = 2,
   ...rest
 }) => {
-  if (!balance) return <></>;
+  if (!balance && balance !== 0) return <></>;
 
-  return (
-    <>
-      {(balance / dollar_rate).toLocaleString(locales, {
-        style,
-        currency,
-        currencyDisplay,
-        maximumFractionDigits,
-        ...rest,
-      })}
-    </>
-  );
+  const finalBalance = balance / dollar_rate;
+
+  try {
+    return (
+      <>
+        {finalBalance.toLocaleString(locales, {
+          style,
+          currency,
+          currencyDisplay,
+          maximumFractionDigits,
+          ...rest,
+        })}
+      </>
+    );
+  } catch (e) {
+    return <>{`${currency} ${finalBalance.toFixed(maximumFractionDigits)}`}</>;
+  }
 };
 
 export default Balance;

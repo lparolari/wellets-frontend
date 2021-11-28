@@ -10,6 +10,11 @@ import {
   StackDirection,
   Skeleton,
   IconButton,
+  Stat,
+  StatLabel,
+  StatNumber,
+  Box,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import { FiRefreshCw } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
@@ -22,14 +27,17 @@ import ContentContainer from 'Components/Atoms/ContentContainer';
 import Table from 'Components/Molecules/Table';
 import CreateWalletForm from 'Components/Organisms/CreateWalletForm';
 import Header from 'Components/Organisms/Header';
+import Space from 'Components/Atoms/Space/Space';
+import Balance from 'Components/Molecules/Balance/Balance';
+import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 
 import { useErrors } from 'Hooks/errors';
 
 import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
 
-import formatWalletValue from 'Helpers/formatWalletValue';
-import getCurrency from 'Helpers/getCurrency';
+import { getCurrency, getCurrencyName } from 'Helpers/getCurrency';
+
 import api from 'Services/api';
 
 const Wallets: React.FC = () => {
@@ -143,9 +151,20 @@ const Wallets: React.FC = () => {
     [handleErrors],
   );
 
+  const fetchUserSettings = useCallback(async () => {
+    try {
+      setLoadingFetchUserSettings(true);
+      const response = await api.get('/users/settings');
+      setBaseCurrencyId(response.data.currency_id);
+    } catch (err) {
+      // fail silently, proceed with default
+    } finally {
+      setLoadingFetchUserSettings(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchWallets();
-    // eslint-disable-next-line
   }, [fetchWallets, history]);
 
   useEffect(() => {
@@ -153,25 +172,12 @@ const Wallets: React.FC = () => {
   }, [fetchCurrencies]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoadingFetchUserSettings(true);
-        const response = await api.get('/users/settings');
-        setBaseCurrencyId(response.data.currency_id);
-      } catch (err) {
-        // fail silently, proceed with default
-      } finally {
-        setLoadingFetchUserSettings(false);
-      }
-      if (!baseCurrencyId) {
-        if (!wallets[0]) return;
-        const { currency_id } = wallets[0];
-        setBaseCurrencyId(currency_id);
-        fetchTotalBalance(currency_id);
-        return;
-      }
-      await fetchTotalBalance(baseCurrencyId);
-    })();
+    fetchUserSettings();
+  }, [fetchUserSettings]);
+
+  useEffect(() => {
+    if (!baseCurrencyId) return;
+    fetchTotalBalance(baseCurrencyId);
   }, [fetchTotalBalance, baseCurrencyId, wallets]);
 
   return (
@@ -181,36 +187,51 @@ const Wallets: React.FC = () => {
       <ContentContainer flexDirection="column" justifyContent="start">
         <Heading>Wallets</Heading>
 
-        <Skeleton
-          isLoaded={
-            !loadingFetchCurrencies &&
-            !loadingFetchTotalBalance &&
-            !loadingFetchUserSettings
-          }
-        >
-          <Flex alignItems="center">
-            <Heading size="md" mr="10px">
-              {`You have, approximately, ${totalBalance}`}
-            </Heading>
-            <Form onSubmit={() => fetchTotalBalance(baseCurrencyId)}>
-              <Stack spacing="10px" direction="row">
-                <Select
-                  onChange={e => setBaseCurrencyId(e.target.value)}
-                  name="base_currency_id"
-                  options={currenciesOptions}
-                  defaultValue={baseCurrencyId}
-                />
-                <IconButton
-                  type="submit"
-                  colorScheme="green"
-                  variant="outline"
-                  aria-label="Refresh"
-                  icon={<FiRefreshCw />}
-                />
-              </Stack>
-            </Form>
-          </Flex>
-        </Skeleton>
+        <Box mt="10px" w="100%">
+          <Skeleton
+            isLoaded={
+              !loadingFetchCurrencies &&
+              !loadingFetchTotalBalance &&
+              !loadingFetchUserSettings
+            }
+          >
+            <SimpleGrid columns={2} spacing={10}>
+              <Box>
+                <Stat>
+                  <StatLabel>Total balance</StatLabel>
+                  <StatNumber>
+                    <Balance
+                      balance={totalBalance}
+                      currency={getCurrencyName(currencies, baseCurrencyId)}
+                    />
+                  </StatNumber>
+                </Stat>
+              </Box>
+
+              <Box>
+                <Flex justifyContent="end">
+                  <Form onSubmit={() => fetchTotalBalance(baseCurrencyId)}>
+                    <Stack spacing="10px" direction="row">
+                      <Select
+                        onChange={e => setBaseCurrencyId(e.target.value)}
+                        name="base_currency_id"
+                        options={currenciesOptions}
+                        value={baseCurrencyId}
+                      />
+                      <IconButton
+                        type="submit"
+                        colorScheme="green"
+                        variant="outline"
+                        aria-label="Refresh"
+                        icon={<FiRefreshCw />}
+                      />
+                    </Stack>
+                  </Form>
+                </Flex>
+              </Box>
+            </SimpleGrid>
+          </Skeleton>
+        </Box>
 
         <Stack mt="50px" w="100%" direction={stack?.direction} spacing="25px">
           <Skeleton isLoaded={!loadingFetchWallets && !loadingFetchCurrencies}>
@@ -226,7 +247,7 @@ const Wallets: React.FC = () => {
                   title: 'Currency',
                   key: 'currency',
                   render(wallet: IWallet) {
-                    return getCurrency(currencies, wallet.currency_id);
+                    return getCurrencyName(currencies, wallet.currency_id);
                   },
                 },
                 {
@@ -234,8 +255,36 @@ const Wallets: React.FC = () => {
                   key: 'balance',
                   render(wallet: IWallet) {
                     const { balance, currency_id } = wallet;
+
                     const currency = getCurrency(currencies, currency_id);
-                    return formatWalletValue(balance, wallet, currency);
+                    const currencyName =
+                      getCurrencyName(currencies, currency_id) || 'USD';
+
+                    const baseCurrency = getCurrency(
+                      currencies,
+                      baseCurrencyId,
+                    );
+
+                    return (
+                      currency && (
+                        <>
+                          <Balance balance={balance} currency={currencyName} />
+                          {baseCurrency && (
+                            <>
+                              <Space />
+                              <BalanceBadge
+                                balance={balance}
+                                currency={baseCurrency?.acronym}
+                                dollar_rate={
+                                  currency.dollar_rate /
+                                  baseCurrency.dollar_rate
+                                }
+                              />
+                            </>
+                          )}
+                        </>
+                      )
+                    );
                   },
                 },
                 {

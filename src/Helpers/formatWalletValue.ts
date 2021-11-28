@@ -12,5 +12,5 @@ export default function formatWalletValue(
   if (!wallet || !wallet.currency) {
     return parsedValue.toString();
   }
-  return `${wallet.currency.acronym} ${parsedValue}`;
+  return `${wallet.currency.acronym} ${parsedValue.toLocaleString()}`;
 }

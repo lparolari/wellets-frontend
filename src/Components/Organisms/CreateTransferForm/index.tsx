@@ -21,7 +21,7 @@ import ICurrency from 'Entities/ICurrency';
 
 import api from 'Services/api';
 import createTransfer from 'Schemas/createTransfer';
-import getCurrency from 'Helpers/getCurrency';
+import { getCurrencyName } from 'Helpers/getCurrency';
 
 interface IProps {
   wallet: IWallet;
@@ -54,7 +54,7 @@ const CreateTransferForm: React.FC<IProps> = ({
   );
 
   const valuePlaceholder = useMemo(
-    () => `Value (${getCurrency(currencies, wallet.currency_id)})`,
+    () => `Value (${getCurrencyName(currencies, wallet.currency_id)})`,
     [wallet, currencies],
   );
 
@@ -63,7 +63,7 @@ const CreateTransferForm: React.FC<IProps> = ({
       return 'Optional static fee';
     }
     const id = targetWallet.currency_id || wallets[0].currency_id;
-    return `Optional static fee (${getCurrency(currencies, id)})`;
+    return `Optional static fee (${getCurrencyName(currencies, id)})`;
   }, [targetWallet, currencies, wallets]);
 
   const percentualFeePlaceholder = useMemo(() => {
@@ -71,7 +71,7 @@ const CreateTransferForm: React.FC<IProps> = ({
       return 'Optional percentual fee';
     }
     const id = targetWallet.currency_id || wallets[0].currency_id;
-    return `Optional percentual fee (${getCurrency(currencies, id)})`;
+    return `Optional percentual fee (${getCurrencyName(currencies, id)})`;
   }, [targetWallet, currencies, wallets]);
 
   const fetchWallets = useCallback(async () => {

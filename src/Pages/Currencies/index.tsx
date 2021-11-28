@@ -24,6 +24,7 @@ import { useErrors } from 'Hooks/errors';
 import ICurrency from 'Entities/ICurrency';
 
 import api from 'Services/api';
+import Balance from 'Components/Molecules/Balance/Balance';
 
 const Currencies: React.FC = () => {
   const { handleErrors } = useErrors();
@@ -149,7 +150,16 @@ const Currencies: React.FC = () => {
                   title: 'Dollar rate',
                   key: 'dollar_rate',
                   render(currency: ICurrency) {
-                    return `USD ${currency.dollar_rate}`;
+                    return `${Number(currency.dollar_rate).toFixed(8)}`;
+                  },
+                },
+                {
+                  title: 'Dollar Value',
+                  key: 'dollar_value',
+                  render(currency: ICurrency) {
+                    return (
+                      <Balance balance={1} dollar_rate={currency.dollar_rate} />
+                    );
                   },
                 },
                 {
@@ -229,7 +239,16 @@ const Currencies: React.FC = () => {
                 title: 'Dollar rate',
                 key: 'dollar_rate',
                 render(currency: ICurrency) {
-                  return `USD ${currency.dollar_rate}`;
+                  return `${Number(currency.dollar_rate).toFixed(8)}`;
+                },
+              },
+              {
+                title: 'Dollar Value',
+                key: 'dollar_value',
+                render(currency: ICurrency) {
+                  return (
+                    <Balance balance={1} dollar_rate={currency.dollar_rate} />
+                  );
                 },
               },
               {

@@ -13,6 +13,11 @@ import {
   Skeleton,
   Flex,
   IconButton,
+  Box,
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
 } from '@chakra-ui/react';
 import { FiRefreshCw } from 'react-icons/fi';
 
@@ -29,6 +34,14 @@ import IWallet from 'Entities/IWallet';
 import ICurrency from 'Entities/ICurrency';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
+import Balance from 'Components/Molecules/Balance/Balance';
+import {
+  getCurrency,
+  getCurrencyDollarRate,
+  getCurrencyName,
+} from 'Helpers/getCurrency';
+import Space from 'Components/Atoms/Space/Space';
+import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 
 interface IParams {
   id: string;
@@ -51,10 +64,14 @@ const Wallet: React.FC = () => {
   const [currencies, setCurrencies] = useState([] as ICurrency[]);
   const [updateTransactions, setUpdateTransactions] = useState(0);
   const [updateTransfers, setUpdateTransfers] = useState(0);
-  const [loadingFetchWallet, setLoadingFetchWallet] = useState(false);
-  const [loadingFetchCurrencies, setLoadingFetchCurrencies] = useState(false);
-  const [loadingFetchBalance, setLoadingFetchBalance] = useState(false);
+  const [loadingFetchWallet, setLoadingFetchWallet] = useState(true);
+  const [loadingFetchCurrencies, setLoadingFetchCurrencies] = useState(true);
+  const [loadingFetchBalance, setLoadingFetchBalance] = useState(true);
+  const [loadingFetchUserSettings, setLoadingFetchUserSettings] = useState(
+    true,
+  );
   const [targetCurrencyId, setTargetCurrencyId] = useState('');
+  const [baseCurrencyId, setBaseCurrencyId] = useState('');
   const [balance, setBalance] = useState(0);
 
   const currenciesOptions = useMemo<IOption[]>(
@@ -112,6 +129,18 @@ const Wallet: React.FC = () => {
     [handleErrors, targetCurrencyId, currencies, wallet],
   );
 
+  const fetchUserSettings = useCallback(async () => {
+    try {
+      setLoadingFetchUserSettings(true);
+      const response = await api.get('/users/settings');
+      setBaseCurrencyId(response.data.currency_id);
+    } catch (err) {
+      // fail silently, proceed with default
+    } finally {
+      setLoadingFetchUserSettings(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchWallet();
   }, [fetchWallet]);
@@ -131,80 +160,121 @@ const Wallet: React.FC = () => {
     fetchBalance(targetCurrencyId);
   }, [fetchBalance, targetCurrencyId, wallet]);
 
+  useEffect(() => {
+    fetchUserSettings();
+  }, [fetchUserSettings]);
+
   return (
     <PageContainer>
       <Header />
 
-      <Skeleton isLoaded={!loadingFetchWallet && !loadingFetchCurrencies}>
-        <ContentContainer flexDirection="column" justifyContent="start">
-          <Skeleton isLoaded={!loadingFetchCurrencies && !loadingFetchBalance}>
-            <Flex alignItems="center">
-              <Heading size="md" mr="10px">
-                {`${wallet.alias} - ${balance}`}
-              </Heading>
-              <Form onSubmit={() => fetchBalance(targetCurrencyId)}>
-                <Stack spacing="10px" direction="row">
-                  <Select
-                    onChange={e => setTargetCurrencyId(e.target.value)}
-                    name="base_currency_id"
-                    options={currenciesOptions}
-                    defaultValue={targetCurrencyId}
-                  />
-                  <IconButton
-                    type="submit"
-                    colorScheme="green"
-                    variant="outline"
-                    aria-label="Refresh"
-                    icon={<FiRefreshCw />}
-                  />
-                </Stack>
-              </Form>
-            </Flex>
+      <ContentContainer flexDirection="column" justifyContent="start">
+        <Skeleton isLoaded={!loadingFetchWallet}>
+          <Heading>{`${wallet.alias} Wallet`}</Heading>
+        </Skeleton>
+
+        <Box mt="50px" w="100%">
+          <Skeleton
+            isLoaded={
+              !loadingFetchWallet &&
+              !loadingFetchCurrencies &&
+              !loadingFetchBalance &&
+              !loadingFetchUserSettings
+            }
+          >
+            <SimpleGrid columns={2} spacing={10}>
+              <Box>
+                <Stat>
+                  <StatLabel>Total balance</StatLabel>
+                  <StatNumber>
+                    <Balance
+                      balance={balance}
+                      currency={getCurrencyName(currencies, targetCurrencyId)}
+                    />
+                    <Space />
+                    <BalanceBadge
+                      balance={balance}
+                      dollar_rate={
+                        getCurrencyDollarRate(currencies, targetCurrencyId) /
+                        getCurrencyDollarRate(currencies, baseCurrencyId)
+                      }
+                      currency={getCurrencyName(currencies, baseCurrencyId)}
+                    />
+                  </StatNumber>
+                </Stat>
+              </Box>
+
+              <Box>
+                <Flex justifyContent="end">
+                  <Form onSubmit={() => fetchBalance(targetCurrencyId)}>
+                    <Stack spacing="10px" direction="row">
+                      <Select
+                        onChange={e => setTargetCurrencyId(e.target.value)}
+                        name="base_currency_id"
+                        options={currenciesOptions}
+                        value={targetCurrencyId}
+                      />
+                      <IconButton
+                        type="submit"
+                        colorScheme="green"
+                        variant="outline"
+                        aria-label="Refresh"
+                        icon={<FiRefreshCw />}
+                      />
+                    </Stack>
+                  </Form>
+                </Flex>
+              </Box>
+            </SimpleGrid>
           </Skeleton>
+        </Box>
 
-          <Tabs w="100%">
-            <TabList>
-              <Tab>Transactions</Tab>
-              <Tab>Transfers</Tab>
-            </TabList>
+        <Box w="100%" mt="50px">
+          <Skeleton isLoaded={!loadingFetchWallet && !loadingFetchCurrencies}>
+            <Tabs>
+              <TabList>
+                <Tab>Transactions</Tab>
+                <Tab>Transfers</Tab>
+              </TabList>
 
-            <TabPanels>
-              <TabPanel>
-                <Stack direction={stack?.direction} spacing="25px">
-                  <TransactionsHistory
-                    walletId={params.id}
-                    updateTransactions={updateTransactions}
-                  />
-                  <CreateTransactionForm
-                    wallet={wallet}
-                    currencies={currencies}
-                    onSuccess={() => {
-                      setUpdateTransactions(updateTransactions + 1);
-                      fetchWallet();
-                    }}
-                  />
-                </Stack>
-              </TabPanel>
-              <TabPanel>
-                <Stack direction={stack?.direction} spacing="25px">
-                  <TransfersHistory
-                    walletId={params.id}
-                    updateTransfers={updateTransfers}
-                  />
-                  <CreateTransferForm
-                    wallet={wallet}
-                    currencies={currencies}
-                    onSuccess={() => {
-                      setUpdateTransfers(updateTransfers + 1);
-                      fetchWallet();
-                    }}
-                  />
-                </Stack>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </ContentContainer>
-      </Skeleton>
+              <TabPanels>
+                <TabPanel>
+                  <Stack direction={stack?.direction} spacing="25px">
+                    <TransactionsHistory
+                      walletId={params.id}
+                      updateTransactions={updateTransactions}
+                    />
+                    <CreateTransactionForm
+                      wallet={wallet}
+                      currencies={currencies}
+                      onSuccess={() => {
+                        setUpdateTransactions(updateTransactions + 1);
+                        fetchWallet();
+                      }}
+                    />
+                  </Stack>
+                </TabPanel>
+                <TabPanel>
+                  <Stack direction={stack?.direction} spacing="25px">
+                    <TransfersHistory
+                      walletId={params.id}
+                      updateTransfers={updateTransfers}
+                    />
+                    <CreateTransferForm
+                      wallet={wallet}
+                      currencies={currencies}
+                      onSuccess={() => {
+                        setUpdateTransfers(updateTransfers + 1);
+                        fetchWallet();
+                      }}
+                    />
+                  </Stack>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Skeleton>
+        </Box>
+      </ContentContainer>
     </PageContainer>
   );
 };

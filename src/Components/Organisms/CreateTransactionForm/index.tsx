@@ -15,7 +15,7 @@ import IWallet from 'Entities/IWallet';
 
 import api from 'Services/api';
 import createTransaction from 'Schemas/createTransaction';
-import getCurrency from 'Helpers/getCurrency';
+import { getCurrencyName } from 'Helpers/getCurrency';
 
 interface ICreateTransaction extends ICreateTransactionDTO {
   type?: 'incoming' | 'outcoming';
@@ -40,7 +40,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
   const [loading, setLoading] = useState(false);
 
   const valuePlaceholder = useMemo(
-    () => `Value (${getCurrency(currencies, wallet.currency_id)})`,
+    () => `Value (${getCurrencyName(currencies, wallet.currency_id)})`,
     [wallet, currencies],
   );
 

@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Skeleton } from '@chakra-ui/react';
 
 import Table from 'Components/Molecules/Table';
+import Balance from 'Components/Molecules/Balance/Balance';
 
 import ITransaction from 'Entities/ITransaction';
 import formatDate from 'Helpers/formatDate';
-import formatWalletValue from 'Helpers/formatWalletValue';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
 
@@ -73,7 +73,9 @@ const TransactionHistory: React.FC<IProps> = ({
             key: 'value',
             render(transaction: ITransaction) {
               const { value, wallet } = transaction;
-              return formatWalletValue(value, wallet);
+              return (
+                <Balance balance={value} currency={wallet.currency.acronym} />
+              );
             },
           },
         ]}

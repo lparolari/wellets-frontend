@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Skeleton } from '@chakra-ui/react';
 
 import Table from 'Components/Molecules/Table';
+import Balance from 'Components/Molecules/Balance/Balance';
 
 import ITransfer from 'Entities/ITransfer';
 import formatDate from 'Helpers/formatDate';
 import api from 'Services/api';
-import formatWalletValue from 'Helpers/formatWalletValue';
 import { useErrors } from 'Hooks/errors';
 
 interface IProps {
@@ -65,7 +65,12 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
             key: 'value',
             render(transfer: ITransfer) {
               const { value, from_wallet } = transfer;
-              return formatWalletValue(value, from_wallet);
+              return (
+                <Balance
+                  balance={value}
+                  currency={from_wallet.currency.acronym}
+                />
+              );
             },
           },
           {
@@ -81,7 +86,12 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
               const fee =
                 Number(static_fee) +
                 (Number(percentual_fee) / 100) * Number(value);
-              return formatWalletValue(fee, from_wallet);
+              return (
+                <Balance
+                  balance={fee}
+                  currency={from_wallet.currency.acronym}
+                />
+              );
             },
           },
           {
@@ -90,7 +100,8 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
             render(transfer: ITransfer) {
               const currency = transfer.to_wallet.currency.acronym;
               const { filled } = transfer;
-              return `${Number(filled)} ${currency}`;
+
+              return <Balance balance={Number(filled)} currency={currency} />;
             },
           },
           {
@@ -102,7 +113,7 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
                 return '';
               }
               const { alias, acronym } = from_wallet.currency;
-              return `${alias} -  ${acronym}`;
+              return `${alias} (${acronym})`;
             },
           },
           {
@@ -114,7 +125,7 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
                 return '';
               }
               const { alias, acronym } = to_wallet.currency;
-              return `${alias} -  ${acronym}`;
+              return `${alias} (${acronym})`;
             },
           },
         ]}

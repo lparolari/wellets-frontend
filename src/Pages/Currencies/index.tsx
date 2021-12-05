@@ -56,7 +56,7 @@ const Currencies: React.FC = () => {
     async (loadingEnabled = true) => {
       try {
         if (loadingEnabled) setLoadingFetchAllCurrencies(true);
-        const response = await api.get('/currencies?sort_by=acronym');
+        const response = await api.get('/currencies');
         setAllCurrencies(response.data);
       } catch (err) {
         handleErrors('Error when fetching all currencies', err);
@@ -221,7 +221,7 @@ const Currencies: React.FC = () => {
       <ContentContainer flexDirection="column" justifyContent="start">
         <Heading>All Currencies</Heading>
 
-        <Skeleton isLoaded={!loadingFetchAllCurrencies}>
+        <Skeleton mt="50px" isLoaded={!loadingFetchAllCurrencies}>
           <Table
             rows={allCurrencies}
             columns={[

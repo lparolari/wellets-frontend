@@ -286,6 +286,17 @@ const Wallets: React.FC = () => {
                       )
                     );
                   },
+                  sort: (a: IWallet, b: IWallet) => {
+                    const a_currency = getCurrency(currencies, a.currency_id);
+                    const b_currency = getCurrency(currencies, b.currency_id);
+
+                    const a_dollar_rate = a_currency?.dollar_rate || 1;
+                    const b_dollar_rate = b_currency?.dollar_rate || 1;
+
+                    return (
+                      a.balance / a_dollar_rate - b.balance / b_dollar_rate
+                    );
+                  },
                 },
                 {
                   title: 'Actions',

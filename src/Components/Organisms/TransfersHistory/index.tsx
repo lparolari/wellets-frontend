@@ -8,6 +8,7 @@ import ITransfer from 'Entities/ITransfer';
 import formatDate from 'Helpers/formatDate';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
+import compareDate from 'Helpers/compareDate';
 
 interface IProps {
   walletId: string;
@@ -59,6 +60,9 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
             render(transfer: ITransfer) {
               return formatDate(transfer.created_at);
             },
+            sort(a: ITransfer, b: ITransfer) {
+              return compareDate(a.created_at, b.created_at);
+            },
           },
           {
             title: 'Value',
@@ -71,6 +75,9 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
                   currency={from_wallet.currency.acronym}
                 />
               );
+            },
+            sort(a: ITransfer, b: ITransfer) {
+              return a.value - b.value;
             },
           },
           {
@@ -93,6 +100,16 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
                 />
               );
             },
+            sort(a: ITransfer, b: ITransfer) {
+              const a_fee =
+                Number(a.static_fee) +
+                (Number(a.percentual_fee) / 100) * Number(a.value);
+              const b_fee =
+                Number(b.static_fee) +
+                (Number(b.percentual_fee) / 100) * Number(b.value);
+
+              return a_fee - b_fee;
+            },
           },
           {
             title: 'Filled',
@@ -102,6 +119,12 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
               const { filled } = transfer;
 
               return <Balance balance={Number(filled)} currency={currency} />;
+            },
+            sort: (a: ITransfer, b: ITransfer) => {
+              const a_dollar_rate = a.to_wallet.currency.dollar_rate;
+              const b_dollar_rate = b.to_wallet.currency.dollar_rate;
+
+              return a.filled / a_dollar_rate - b.filled / b_dollar_rate;
             },
           },
           {

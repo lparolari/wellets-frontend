@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CSS from 'csstype';
 import {
   Box,
@@ -11,7 +11,10 @@ import {
   Tr,
   useBreakpointValue,
   ResponsiveValue,
+  Stack,
+  Text,
 } from '@chakra-ui/react';
+import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
 import Pagination, { IPaginationProps } from '../Pagination';
 
@@ -19,11 +22,15 @@ interface IData {
   [key: string]: any;
 }
 
+type SortFn = (a: IData, b: IData) => number;
+type SortDirection = 'asc' | 'desc';
+
 interface IColumn {
   key: string;
   title: string;
   dataIndex?: string;
   render?(row: IData, i: number): any;
+  sort?(a: IData, b: IData): number;
 }
 
 interface IProps {
@@ -35,6 +42,27 @@ interface IProps {
 type OverflowX = ResponsiveValue<CSS.Property.OverflowX>;
 
 const Table: React.FC<IProps> = ({ columns, rows, pagination }) => {
+  const [data, setData] = useState(rows);
+  const [sortKey, setSortKey] = useState<string | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<SortFn | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<SortDirection | undefined>(
+    undefined,
+  );
+
+  const toggleSortOrder = () => {
+    setSortOrder(!!sortOrder && sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
+  const handleSortByClick = (key: string, sortFn: SortFn | undefined) => {
+    if (key === sortKey) {
+      toggleSortOrder();
+    } else {
+      setSortKey(key);
+      setSortBy(() => sortFn);
+      setSortOrder('asc');
+    }
+  };
+
   const box = useBreakpointValue({
     base: {
       overflowX: 'scroll' as OverflowX,
@@ -44,6 +72,16 @@ const Table: React.FC<IProps> = ({ columns, rows, pagination }) => {
     },
   });
 
+  useEffect(() => {
+    if (!sortOrder) return;
+
+    const sortedData = [...rows].sort(sortBy);
+    const sortedDataByOrder =
+      sortOrder === 'desc' ? sortedData.reverse() : sortedData;
+
+    setData(sortedDataByOrder);
+  }, [rows, sortBy, sortOrder]);
+
   return (
     <>
       {(!pagination || (pagination && pagination.total > 0)) && (
@@ -52,12 +90,31 @@ const Table: React.FC<IProps> = ({ columns, rows, pagination }) => {
             <Thead>
               <Tr>
                 {columns.map(column => (
-                  <Th key={column.key}>{column.title}</Th>
+                  <Th key={column.key}>
+                    <Stack direction="row">
+                      <Text
+                        onClick={() => {
+                          handleSortByClick(column.key, column.sort);
+                        }}
+                        cursor="pointer"
+                      >
+                        {column.title}
+                      </Text>
+                      <Box>
+                        {sortKey &&
+                          sortKey === column.key &&
+                          sortOrder &&
+                          ((sortOrder === 'asc' && <FiArrowUp />) || (
+                            <FiArrowDown />
+                          ))}
+                      </Box>
+                    </Stack>
+                  </Th>
                 ))}
               </Tr>
             </Thead>
             <Tbody>
-              {rows.map((row, index) => (
+              {data.map((row, index) => (
                 <Tr key={index}>
                   {columns.map(column => (
                     <Td key={column.key}>

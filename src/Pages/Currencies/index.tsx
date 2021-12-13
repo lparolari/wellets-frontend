@@ -152,6 +152,9 @@ const Currencies: React.FC = () => {
                   render(currency: ICurrency) {
                     return `${Number(currency.dollar_rate).toFixed(8)}`;
                   },
+                  sort: (a: ICurrency, b: ICurrency) => {
+                    return a.dollar_rate - b.dollar_rate;
+                  },
                 },
                 {
                   title: 'Dollar Value',
@@ -160,6 +163,9 @@ const Currencies: React.FC = () => {
                     return (
                       <Balance balance={1} dollar_rate={currency.dollar_rate} />
                     );
+                  },
+                  sort: (a: ICurrency, b: ICurrency) => {
+                    return a.dollar_rate - b.dollar_rate;
                   },
                 },
                 {
@@ -241,6 +247,9 @@ const Currencies: React.FC = () => {
                 render(currency: ICurrency) {
                   return `${Number(currency.dollar_rate).toFixed(8)}`;
                 },
+                sort: (a: ICurrency, b: ICurrency) => {
+                  return a.dollar_rate - b.dollar_rate;
+                },
               },
               {
                 title: 'Dollar Value',
@@ -249,6 +258,9 @@ const Currencies: React.FC = () => {
                   return (
                     <Balance balance={1} dollar_rate={currency.dollar_rate} />
                   );
+                },
+                sort: (a: ICurrency, b: ICurrency) => {
+                  return a.dollar_rate - b.dollar_rate;
                 },
               },
               {

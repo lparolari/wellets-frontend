@@ -8,6 +8,7 @@ import ITransaction from 'Entities/ITransaction';
 import formatDate from 'Helpers/formatDate';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
+import compareDate from 'Helpers/compareDate';
 
 interface IProps {
   walletId: string;
@@ -62,6 +63,9 @@ const TransactionHistory: React.FC<IProps> = ({
             render(transaction: ITransaction) {
               return formatDate(transaction.created_at);
             },
+            sort(a: ITransaction, b: ITransaction) {
+              return compareDate(a.created_at, b.created_at);
+            },
           },
           {
             title: 'Description',
@@ -76,6 +80,9 @@ const TransactionHistory: React.FC<IProps> = ({
               return (
                 <Balance balance={value} currency={wallet.currency.acronym} />
               );
+            },
+            sort(a: ITransaction, b: ITransaction) {
+              return a.value - b.value;
             },
           },
         ]}

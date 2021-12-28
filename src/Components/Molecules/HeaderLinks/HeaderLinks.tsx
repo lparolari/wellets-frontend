@@ -9,6 +9,9 @@ interface IProps {
 
 const HeaderLinks: React.FC<IProps> = props => (
   <>
+    <NavLink to="/portfolio" {...props}>
+      Portfolio
+    </NavLink>
     <NavLink to="/wallets" {...props}>
       Wallets
     </NavLink>

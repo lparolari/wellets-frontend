@@ -15,7 +15,7 @@ import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import Header from 'Components/Organisms/Header';
 import Table from 'Components/Molecules/Table';
-import UpsertPocketForm from 'Components/Organisms/UpsertPocketForm';
+import UpsertPortfolioForm from 'Components/Organisms/UpsertPortfolioForm';
 
 import { useErrors } from 'Hooks/errors';
 
@@ -172,12 +172,12 @@ const Portfolio: React.FC = () => {
             />
           </Skeleton>
 
-          <UpsertPocketForm
+          <UpsertPortfolioForm
             onSuccess={() => {
               setCurrentPocket({} as IPocket);
               fetchPockets();
             }}
-            currentPocket={currentPocket}
+            currentPortfolio={currentPocket}
             onCancelUpdate={() => setCurrentPocket({} as IPocket)}
           />
         </Stack>

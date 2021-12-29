@@ -14,25 +14,25 @@ import Button from 'Components/Atoms/Button';
 
 import { useErrors } from 'Hooks/errors';
 
-import IPocket from 'Entities/IPocket';
-import IUpsertPocketDTO from 'DTOs/IUpsertPocketDTO';
-import IFormPocketDTO from 'DTOs/IFormPocketDTO';
+import IPortfolio from 'Entities/IPortfolio';
+import IUpsertPortfolioDTO from 'DTOs/IUpsertPortfolioDTO';
+import IFormPortfolioDTO from 'DTOs/IFormPortfolioDTO';
 
 import api from 'Services/api';
-import upsertPocket from 'Schemas/upsertPocket';
+import upsertPortfolio from 'Schemas/upsertPortfolio';
 import IWallet from 'Entities/IWallet';
 import { IOption } from 'Components/Atoms/Select';
 import Select from 'Components/Atoms/BetterSelect';
 
 interface IProps {
-  currentPocket: IPocket;
+  currentPortfolio: IPortfolio;
   onSuccess?: () => void;
   onCancelUpdate?: () => void;
 }
 
-const UpsertPocketForm: React.FC<IProps> = ({
+const UpsertPortfolioForm: React.FC<IProps> = ({
   onSuccess,
-  currentPocket,
+  currentPortfolio,
   onCancelUpdate,
 }) => {
   const toast = useToast();
@@ -41,16 +41,16 @@ const UpsertPocketForm: React.FC<IProps> = ({
   const formRef = useRef<FormHandles>(null);
 
   const [wallets, setWallets] = useState([] as IWallet[]);
-  const [pockets, setPockets] = useState([] as IPocket[]);
+  const [portfolios, setPortfolios] = useState([] as IPortfolio[]);
 
-  const [loadingUpsertPocket, setLoadingUpsertPocket] = useState(false);
+  const [loadingUpsertPortfolio, setLoadingUpsertPortfolio] = useState(false);
   const [loadingFetchWallets, setLoadingFetchWallets] = useState(false);
-  const [loadingFetchPockets, setLoadingFetchPockets] = useState(false);
+  const [loadingFetchPortfolios, setLoadingFetchPortfolios] = useState(false);
 
-  const pocketToOption = (pocket: IPocket) => {
+  const portfolioToOption = (portfolio: IPortfolio) => {
     return {
-      value: pocket.id,
-      label: `${pocket.alias} ${!pocket.parent ? '(root)' : ''}`,
+      value: portfolio.id,
+      label: `${portfolio.alias} ${!portfolio.parent ? '(root)' : ''}`,
     } as IOption;
   };
 
@@ -61,7 +61,10 @@ const UpsertPocketForm: React.FC<IProps> = ({
     } as IOption;
   };
 
-  const pocketsOptions = useMemo(() => pockets.map(pocketToOption), [pockets]);
+  const portfoliosOptions = useMemo(
+    () => portfolios.map(portfolioToOption),
+    [portfolios],
+  );
   const walletsOptions = useMemo(() => wallets.map(walletToOption), [wallets]);
 
   const fetchWallets = useCallback(async () => {
@@ -80,22 +83,22 @@ const UpsertPocketForm: React.FC<IProps> = ({
     }
   }, [handleErrors]);
 
-  const fetchPockets = useCallback(async () => {
+  const fetchPortfolios = useCallback(async () => {
     try {
-      setLoadingFetchPockets(true);
-      const response = await api.get('/pockets');
-      setPockets(response.data);
-      setLoadingFetchPockets(false);
+      setLoadingFetchPortfolios(true);
+      const response = await api.get('/portfolios');
+      setPortfolios(response.data);
+      setLoadingFetchPortfolios(false);
     } catch (err) {
-      handleErrors('Error when fetching pockets', err);
+      handleErrors('Error when fetching portfolios', err);
     }
   }, [handleErrors]);
 
-  const handleUpsertPocket = useCallback(
-    async (formData: IFormPocketDTO) => {
-      const isUpdate = !!currentPocket.id;
+  const handleUpsertPortfolio = useCallback(
+    async (formData: IFormPortfolioDTO) => {
+      const isUpdate = !!currentPortfolio.id;
 
-      const data: IUpsertPocketDTO = {
+      const data: IUpsertPortfolioDTO = {
         alias: formData.alias,
         weight: formData.weight,
         parent_id: formData.parent ? `${formData.parent?.value}` : undefined,
@@ -105,23 +108,23 @@ const UpsertPocketForm: React.FC<IProps> = ({
       };
 
       try {
-        setLoadingUpsertPocket(true);
+        setLoadingUpsertPortfolio(true);
         formRef.current?.setErrors({});
 
-        await upsertPocket.validate(data, {
+        await upsertPortfolio.validate(data, {
           abortEarly: false,
         });
 
         if (isUpdate) {
-          await api.put(`/pockets/${currentPocket.id}`, data);
+          await api.put(`/portfolios/${currentPortfolio.id}`, data);
         } else {
-          await api.post('/pockets', data);
+          await api.post('/portfolios', data);
         }
 
         toast({
           title: isUpdate
-            ? 'Your pocket was successfully updated!'
-            : 'A new pocket has been successfully created!',
+            ? 'Your portfolio was successfully updated!'
+            : 'A new portfolio has been successfully created!',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -140,22 +143,22 @@ const UpsertPocketForm: React.FC<IProps> = ({
           formRef,
         );
       } finally {
-        setLoadingUpsertPocket(false);
+        setLoadingUpsertPortfolio(false);
       }
     },
-    [formRef, onSuccess, handleErrors, toast, currentPocket],
+    [formRef, onSuccess, handleErrors, toast, currentPortfolio],
   );
 
   useEffect(() => {
-    if (currentPocket.id) {
+    if (currentPortfolio.id) {
       formRef.current?.setData({
-        id: currentPocket.id,
-        alias: currentPocket.alias,
-        weight: currentPocket.weight * 100,
-        parent: currentPocket.parent
-          ? pocketToOption(currentPocket.parent)
+        id: currentPortfolio.id,
+        alias: currentPortfolio.alias,
+        weight: currentPortfolio.weight * 100,
+        parent: currentPortfolio.parent
+          ? portfolioToOption(currentPortfolio.parent)
           : undefined,
-        wallets: currentPocket.wallets.map(wallet => ({
+        wallets: currentPortfolio.wallets.map(wallet => ({
           value: wallet.id,
           label: wallet.alias,
         })),
@@ -163,11 +166,11 @@ const UpsertPocketForm: React.FC<IProps> = ({
       return;
     }
     formRef.current?.reset();
-  }, [currentPocket]);
+  }, [currentPortfolio]);
 
   useEffect(() => {
-    fetchPockets();
-  }, [fetchPockets]);
+    fetchPortfolios();
+  }, [currentPortfolio]);
 
   useEffect(() => {
     fetchWallets();
@@ -175,13 +178,13 @@ const UpsertPocketForm: React.FC<IProps> = ({
 
   return (
     <Box w="100%">
-      <Form ref={formRef} onSubmit={handleUpsertPocket}>
+      <Form ref={formRef} onSubmit={handleUpsertPortfolio}>
         <Input name="alias" type="text" placeholder="Alias" />
         <Input
           name="weight"
           type="number"
           placeholder="Weight"
-          helper="The pocket allocation in percentage"
+          helper="The portfolio allocation in percentage"
         />
         <Skeleton isLoaded={!loadingFetchWallets}>
           <Select
@@ -189,27 +192,27 @@ const UpsertPocketForm: React.FC<IProps> = ({
             name="wallets"
             placeholder="Select one or more wallets"
             options={walletsOptions}
-            helper="Wallets belonging to the pocket"
+            helper="Wallets belonging to the portfolio"
           />
         </Skeleton>
-        <Skeleton isLoaded={!loadingFetchPockets}>
+        <Skeleton isLoaded={!loadingFetchPortfolios}>
           <Select
             name="parent"
-            placeholder="Select a pocket"
-            options={pocketsOptions}
-            helper="Parent pocket - do not set for root pockets"
+            placeholder="Select a portfolio"
+            options={portfoliosOptions}
+            helper="Parent portfolio - do not set for root portfolios"
           />
         </Skeleton>
         <Stack spacing="10px">
           <Button
-            isLoading={loadingUpsertPocket}
+            isLoading={loadingUpsertPortfolio}
             type="submit"
             colorSchema="blue"
             isPrimary
           >
-            {currentPocket.id ? 'Update' : 'Create'}
+            {currentPortfolio.id ? 'Update' : 'Create'}
           </Button>
-          {currentPocket.id && (
+          {currentPortfolio.id && (
             <Button type="button" onClick={onCancelUpdate} isDanger>
               Cancel
             </Button>
@@ -220,4 +223,4 @@ const UpsertPocketForm: React.FC<IProps> = ({
   );
 };
 
-export default UpsertPocketForm;
+export default UpsertPortfolioForm;

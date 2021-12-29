@@ -10,6 +10,7 @@ import Wallet from 'Pages/Wallet';
 import Currencies from 'Pages/Currencies';
 import Settings from 'Pages/Settings';
 import Portfolio from 'Pages/Portfolio';
+import Rebalance from 'Pages/Rebalance';
 
 const Routes: React.FC = () => {
   return (
@@ -24,7 +25,8 @@ const Routes: React.FC = () => {
 
       <Route path="/currencies" component={Currencies} isPrivate />
 
-      <Route path="/portfolio" component={Portfolio} isPrivate />
+      <Route path="/portfolio" component={Portfolio} isPrivate exact />
+      <Route path="/portfolio/:id/rebalance" component={Rebalance} isPrivate />
 
       <Redirect from="*" to="/" />
     </Switch>

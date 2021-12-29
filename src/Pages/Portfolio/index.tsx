@@ -8,6 +8,7 @@ import {
   Link,
   Flex,
   useToast,
+  LinkOverlay,
 } from '@chakra-ui/react';
 
 import PageContainer from 'Components/Atoms/PageContainer';
@@ -133,6 +134,13 @@ const Portfolio: React.FC = () => {
                   render(pocket: IPocket) {
                     return (
                       <Flex>
+                        <Button mr="10px">
+                          <LinkOverlay
+                            href={`/portfolio/${pocket.id}/rebalance`}
+                          >
+                            View
+                          </LinkOverlay>
+                        </Button>
                         <Button
                           type="button"
                           onClick={() =>
@@ -149,8 +157,7 @@ const Portfolio: React.FC = () => {
                           isLoading={loadingDeletePocket}
                           onClick={() => handleDeletePocket(pocket.id)}
                           confirmation={{
-                            body:
-                              'Are you sure you want to delete this pocket? Every child pocket (if any) will be deleted.',
+                            body: 'Are you sure you want to delete this pocket? Every child pocket (if any) will be deleted.',
                             buttonText: 'I am sure',
                             colorSchema: 'red',
                           }}

@@ -15,11 +15,11 @@ import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import Header from 'Components/Organisms/Header';
 import Table from 'Components/Molecules/Table';
-import UpsertPocketForm from 'Components/Organisms/UpsertPocketForm';
+import UpsertPortfolioForm from 'Components/Organisms/UpsertPortfolioForm';
 
 import { useErrors } from 'Hooks/errors';
 
-import IPocket from 'Entities/IPocket';
+import IPortfolio from 'Entities/IPortfolio';
 
 import api from 'Services/api';
 import Button from 'Components/Atoms/Button';
@@ -37,48 +37,48 @@ const Portfolio: React.FC = () => {
     },
   });
 
-  const [currentPocket, setCurrentPocket] = useState({} as IPocket);
-  const [pockets, setPockets] = useState([] as IPocket[]);
-  const [loadingFetchPockets, setLoadingFetchPockets] = useState(false);
-  const [loadingDeletePocket, setLoadingDeletePocket] = useState(false);
+  const [currentPortfolio, setCurrentPortfolio] = useState({} as IPortfolio);
+  const [portfolios, setPortfolios] = useState([] as IPortfolio[]);
+  const [loadingFetchPortfolios, setLoadingFetchPortfolios] = useState(false);
+  const [loadingDeletePortfolio, setLoadingDeletePortfolio] = useState(false);
 
-  const fetchPockets = useCallback(async () => {
+  const fetchPortfolios = useCallback(async () => {
     try {
-      setLoadingFetchPockets(true);
-      const response = await api.get('/pockets');
-      setPockets(response.data);
+      setLoadingFetchPortfolios(true);
+      const response = await api.get('/portfolios');
+      setPortfolios(response.data);
     } catch (err) {
-      handleErrors('Error when fetching pockets', err);
+      handleErrors('Error when fetching portfolios', err);
     } finally {
-      setLoadingFetchPockets(false);
+      setLoadingFetchPortfolios(false);
     }
   }, [handleErrors]);
 
-  const handleDeletePocket = useCallback(
+  const handleDeletePortfolio = useCallback(
     async (id: string) => {
       try {
-        setLoadingDeletePocket(true);
-        await api.delete(`/pockets/${id}`);
+        setLoadingDeletePortfolio(true);
+        await api.delete(`/portfolios/${id}`);
         toast({
-          title: 'Pocket deleted',
-          description: 'Your pocket was successfully deleted',
+          title: 'Portfolio deleted',
+          description: 'Your portfolio was successfully deleted',
           status: 'success',
           duration: 5000,
           isClosable: true,
         });
-        fetchPockets();
+        fetchPortfolios();
       } catch (err) {
-        handleErrors('Error when deleting pocket', err);
+        handleErrors('Error when deleting portfolio', err);
       } finally {
-        setLoadingDeletePocket(false);
+        setLoadingDeletePortfolio(false);
       }
     },
-    [toast, handleErrors, fetchPockets],
+    [toast, handleErrors, fetchPortfolios],
   );
 
   useEffect(() => {
-    fetchPockets();
-  }, [fetchPockets]);
+    fetchPortfolios();
+  }, [fetchPortfolios]);
 
   return (
     <PageContainer>
@@ -88,32 +88,32 @@ const Portfolio: React.FC = () => {
         <Heading>Portfolio</Heading>
 
         <Stack mt="50px" w="100%" direction={stack?.direction} spacing="25px">
-          <Skeleton isLoaded={!loadingFetchPockets}>
+          <Skeleton isLoaded={!loadingFetchPortfolios}>
             <Table
-              rows={pockets}
+              rows={portfolios}
               columns={[
                 {
-                  title: 'Pocket',
+                  title: 'Portfolio',
                   key: 'alias',
                   dataIndex: 'alias',
                 },
                 {
                   title: 'Parent',
                   key: 'parent',
-                  render(pocket: IPocket) {
-                    return pocket.parent ? pocket.parent.alias : '(root)';
+                  render(x: IPortfolio) {
+                    return x.parent ? x.parent.alias : '(root)';
                   },
                 },
                 {
                   title: 'Wallets',
                   key: 'wallets',
-                  render(pocket: IPocket) {
+                  render(x: IPortfolio) {
                     return (
                       <>
-                        {pocket.wallets.map((wallet, i) => (
+                        {x.wallets.map((wallet, i) => (
                           <Link href={`/wallets/${wallet.id}`} key={wallet.id}>
                             {`${wallet.alias}${
-                              i === pocket.wallets.length - 1 ? '' : ', '
+                              i === x.wallets.length - 1 ? '' : ', '
                             }`}
                           </Link>
                         ))}
@@ -124,28 +124,26 @@ const Portfolio: React.FC = () => {
                 {
                   title: 'Weight',
                   key: 'weight',
-                  render(pocket: IPocket) {
-                    return `${Number(pocket.weight * 100).toFixed(0)}%`;
+                  render(x: IPortfolio) {
+                    return `${Number(x.weight * 100).toFixed(0)}%`;
                   },
                 },
                 {
                   title: 'Actions',
                   key: 'actions',
-                  render(pocket: IPocket) {
+                  render(x: IPortfolio) {
                     return (
                       <Flex>
                         <Button mr="10px">
-                          <LinkOverlay
-                            href={`/portfolio/${pocket.id}/rebalance`}
-                          >
+                          <LinkOverlay href={`/portfolio/${x.id}/rebalance`}>
                             View
                           </LinkOverlay>
                         </Button>
                         <Button
                           type="button"
                           onClick={() =>
-                            setCurrentPocket({
-                              ...pocket,
+                            setCurrentPortfolio({
+                              ...x,
                             })
                           }
                           mr="10px"
@@ -154,10 +152,10 @@ const Portfolio: React.FC = () => {
                         </Button>
                         <Button
                           type="button"
-                          isLoading={loadingDeletePocket}
-                          onClick={() => handleDeletePocket(pocket.id)}
+                          isLoading={loadingDeletePortfolio}
+                          onClick={() => handleDeletePortfolio(x.id)}
                           confirmation={{
-                            body: 'Are you sure you want to delete this pocket? Every child pocket (if any) will be deleted.',
+                            body: 'Are you sure you want to delete this portfolio? Every child portfolio (if any) will be deleted.',
                             buttonText: 'I am sure',
                             colorSchema: 'red',
                           }}
@@ -172,13 +170,13 @@ const Portfolio: React.FC = () => {
             />
           </Skeleton>
 
-          <UpsertPocketForm
+          <UpsertPortfolioForm
             onSuccess={() => {
-              setCurrentPocket({} as IPocket);
-              fetchPockets();
+              setCurrentPortfolio({} as IPortfolio);
+              fetchPortfolios();
             }}
-            currentPocket={currentPocket}
-            onCancelUpdate={() => setCurrentPocket({} as IPocket)}
+            currentPortfolio={currentPortfolio}
+            onCancelUpdate={() => setCurrentPortfolio({} as IPortfolio)}
           />
         </Stack>
       </ContentContainer>

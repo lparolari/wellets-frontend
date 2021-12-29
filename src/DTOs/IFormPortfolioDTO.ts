@@ -1,10 +1,10 @@
 import { IOption } from 'Components/Atoms/Select';
 
-interface IUpsertPocketDTO {
+interface IFormPortfolioDTO {
   alias: string;
   weight: number;
   parent?: IOption;
   wallets?: IOption[];
 }
 
-export default IUpsertPocketDTO;
+export default IFormPortfolioDTO;

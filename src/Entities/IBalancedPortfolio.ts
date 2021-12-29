@@ -1,4 +1,4 @@
-import IPortfolio from './IPocket';
+import IPortfolio from './IPortfolio';
 
 interface IBalancedPortfolio extends IPortfolio {
   target_value: number;

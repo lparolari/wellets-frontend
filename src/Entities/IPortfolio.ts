@@ -1,3 +1,11 @@
-import IPocket from './IPocket';
+import IWallet from './IWallet';
 
-export default IPocket;
+interface IPortfolio {
+  id: string;
+  alias: string;
+  weight: number;
+  parent?: IPortfolio;
+  wallets: IWallet[];
+}
+
+export default IPortfolio;

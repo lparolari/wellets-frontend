@@ -65,6 +65,7 @@ const Portfolio: React.FC = () => {
           status: 'success',
           duration: 5000,
           isClosable: true,
+          position: 'top-right',
         });
         fetchPortfolios();
       } catch (err) {

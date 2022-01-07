@@ -129,7 +129,7 @@ const Portfolio: React.FC = () => {
                   key: 'alias',
                   render(x: IBalancedPortfolio) {
                     return (
-                      <Link href={`/portfolio/${x.id}/rebalance`} key={x.id}>
+                      <Link href={`/portfolios/${x.id}/rebalance`} key={x.id}>
                         {x.alias}
                       </Link>
                     );

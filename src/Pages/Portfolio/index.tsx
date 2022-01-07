@@ -135,7 +135,7 @@ const Portfolio: React.FC = () => {
                     return (
                       <Flex>
                         <Button mr="10px">
-                          <LinkOverlay href={`/portfolio/${x.id}/rebalance`}>
+                          <LinkOverlay href={`/portfolios/${x.id}/rebalance`}>
                             View
                           </LinkOverlay>
                         </Button>

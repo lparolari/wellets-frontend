@@ -50,7 +50,9 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
   const portfolioToOption = (portfolio: IPortfolio) => {
     return {
       value: portfolio.id,
-      label: `${portfolio.alias} ${!portfolio.parent ? '(root)' : ''}`,
+      label: `${portfolio.alias} ${
+        !portfolio.parent ? '(root)' : `(${portfolio.parent.alias})`
+      }`,
     } as IOption;
   };
 
@@ -137,8 +139,8 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
       } catch (err) {
         handleErrors(
           isUpdate
-            ? 'Error when updating your currency'
-            : 'Error when creating a new currency',
+            ? 'Error when updating your portfolio'
+            : 'Error when creating a new portfolio',
           err,
           formRef,
         );

@@ -100,7 +100,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
 
       const data: IUpsertPortfolioDTO = {
         alias: formData.alias,
-        weight: formData.weight,
+        weight: formData.weight / 100,
         parent_id: formData.parent ? `${formData.parent?.value}` : undefined,
         wallet_ids: formData.wallets
           ? formData.wallets?.map((wallet: IOption) => `${wallet.value}`)

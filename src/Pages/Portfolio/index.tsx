@@ -9,7 +9,9 @@ import {
   Flex,
   useToast,
   LinkOverlay,
+  IconButton,
 } from '@chakra-ui/react';
+import { FiCornerLeftUp } from 'react-icons/fi';
 
 import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
@@ -23,10 +25,17 @@ import IPortfolio from 'Entities/IPortfolio';
 
 import api from 'Services/api';
 import Button from 'Components/Atoms/Button';
+import { useHistory, useParams } from 'react-router-dom';
+
+interface IParams {
+  parent_id: string;
+}
 
 const Portfolio: React.FC = () => {
   const { handleErrors } = useErrors();
 
+  const history = useHistory();
+  const params = useParams<IParams>();
   const toast = useToast();
   const stack = useBreakpointValue({
     base: {
@@ -37,22 +46,64 @@ const Portfolio: React.FC = () => {
     },
   });
 
+  const [selectedPortfolio, setSelectedPortfolio] = useState({} as IPortfolio);
   const [currentPortfolio, setCurrentPortfolio] = useState({} as IPortfolio);
   const [portfolios, setPortfolios] = useState([] as IPortfolio[]);
   const [loadingFetchPortfolios, setLoadingFetchPortfolios] = useState(false);
+  const [loadingFetchPortfolio, setLoadingFetchPortfolio] = useState(false);
+  const [loadingFetchCurrentPortfolios, setLoadingFetchCurrentPortfolio] =
+    useState(false);
   const [loadingDeletePortfolio, setLoadingDeletePortfolio] = useState(false);
 
   const fetchPortfolios = useCallback(async () => {
     try {
       setLoadingFetchPortfolios(true);
-      const response = await api.get('/portfolios');
+      const { parent_id } = params;
+      const response = await api.get(
+        `/portfolios${parent_id ? '/' + parent_id : ''}`,
+      );
       setPortfolios(response.data);
     } catch (err) {
       handleErrors('Error when fetching portfolios', err);
     } finally {
       setLoadingFetchPortfolios(false);
     }
-  }, [handleErrors]);
+  }, [params, handleErrors]);
+
+  const fetchPortfolio = useCallback(
+    async (id?: string) => {
+      try {
+        setLoadingFetchPortfolio(true);
+        const response = await api.get(
+          `/portfolios/details${id ? '/' + id : ''}`,
+        );
+        setSelectedPortfolio(response.data);
+      } catch (err) {
+        handleErrors('Error when fetching portfolio', err);
+      } finally {
+        setLoadingFetchPortfolio(false);
+      }
+    },
+    [params, handleErrors],
+  );
+
+  const fetchCurrentPortfolio = useCallback(async () => {
+    try {
+      const { parent_id } = params;
+      if (!parent_id) {
+        setCurrentPortfolio({} as IPortfolio);
+        return;
+      }
+
+      setLoadingFetchCurrentPortfolio(true);
+      const response = await api.get(`/portfolios/details/${parent_id}`);
+      setCurrentPortfolio(response.data);
+    } catch (err) {
+      handleErrors('Error when fetching current portfolio', err);
+    } finally {
+      setLoadingFetchCurrentPortfolio(false);
+    }
+  }, [params, handleErrors]);
 
   const handleDeletePortfolio = useCallback(
     async (id: string) => {
@@ -81,12 +132,36 @@ const Portfolio: React.FC = () => {
     fetchPortfolios();
   }, [fetchPortfolios]);
 
+  useEffect(() => {
+    fetchCurrentPortfolio();
+  }, [fetchCurrentPortfolio]);
+
   return (
     <PageContainer>
       <Header color="pink" />
 
       <ContentContainer flexDirection="column" justifyContent="start">
-        <Heading>Portfolio</Heading>
+        <Skeleton isLoaded={!loadingFetchCurrentPortfolios}>
+          <Heading>{currentPortfolio.alias} Portfolio</Heading>
+          {currentPortfolio.id && (
+            <Stack alignItems={'center'}>
+              <IconButton
+                onClick={() =>
+                  history.push(
+                    `/portfolios${
+                      currentPortfolio.parent
+                        ? '/' + currentPortfolio.parent.id
+                        : ''
+                    }`,
+                  )
+                }
+                variant="outline"
+                aria-label="Back"
+                icon={<FiCornerLeftUp />}
+              />
+            </Stack>
+          )}
+        </Skeleton>
 
         <Stack mt="50px" w="100%" direction={stack?.direction} spacing="25px">
           <Skeleton isLoaded={!loadingFetchPortfolios}>
@@ -96,13 +171,32 @@ const Portfolio: React.FC = () => {
                 {
                   title: 'Portfolio',
                   key: 'alias',
-                  dataIndex: 'alias',
+                  render(x: IPortfolio) {
+                    return <Link href={`/portfolios/${x.id}`}>{x.alias}</Link>;
+                  },
                 },
                 {
-                  title: 'Parent',
-                  key: 'parent',
+                  title: 'Weight',
+                  key: 'weight',
                   render(x: IPortfolio) {
-                    return x.parent ? x.parent.alias : '(root)';
+                    return `${Number(x.weight * 100).toFixed(0)}%`;
+                  },
+                },
+                {
+                  title: 'Children',
+                  key: 'children',
+                  render(x: IPortfolio) {
+                    return (
+                      <>
+                        {x.children.map((child, i) => (
+                          <Link href={`/portfolios/${child.id}`} key={child.id}>
+                            {`${child.alias}${
+                              i === x.children.length - 1 ? '' : ', '
+                            }`}
+                          </Link>
+                        ))}
+                      </>
+                    );
                   },
                 },
                 {
@@ -123,13 +217,6 @@ const Portfolio: React.FC = () => {
                   },
                 },
                 {
-                  title: 'Weight',
-                  key: 'weight',
-                  render(x: IPortfolio) {
-                    return `${Number(x.weight * 100).toFixed(0)}%`;
-                  },
-                },
-                {
                   title: 'Actions',
                   key: 'actions',
                   render(x: IPortfolio) {
@@ -142,11 +229,7 @@ const Portfolio: React.FC = () => {
                         </Button>
                         <Button
                           type="button"
-                          onClick={() =>
-                            setCurrentPortfolio({
-                              ...x,
-                            })
-                          }
+                          onClick={() => fetchPortfolio(x.id)}
                           mr="10px"
                         >
                           Edit
@@ -173,11 +256,11 @@ const Portfolio: React.FC = () => {
 
           <UpsertPortfolioForm
             onSuccess={() => {
-              setCurrentPortfolio({} as IPortfolio);
+              setSelectedPortfolio({} as IPortfolio);
               fetchPortfolios();
             }}
-            currentPortfolio={currentPortfolio}
-            onCancelUpdate={() => setCurrentPortfolio({} as IPortfolio)}
+            currentPortfolio={selectedPortfolio}
+            onCancelUpdate={() => setSelectedPortfolio({} as IPortfolio)}
           />
         </Stack>
       </ContentContainer>

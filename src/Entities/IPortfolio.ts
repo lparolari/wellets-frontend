@@ -5,6 +5,7 @@ interface IPortfolio {
   alias: string;
   weight: number;
   parent?: IPortfolio;
+  children: IPortfolio[];
   wallets: IWallet[];
 }
 

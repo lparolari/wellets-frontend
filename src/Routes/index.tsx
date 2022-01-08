@@ -25,8 +25,7 @@ const Routes: React.FC = () => {
 
       <Route path="/currencies" component={Currencies} isPrivate />
 
-      <Route path="/portfolios" component={Portfolio} isPrivate exact />
-      <Route path="/portfolios/:id" component={Portfolio} isPrivate />
+      <Route path="/portfolios/:parent_id?" component={Portfolio} isPrivate />
       <Route path="/portfolios/:id/rebalance" component={Rebalance} isPrivate />
 
       <Redirect from="*" to="/" />

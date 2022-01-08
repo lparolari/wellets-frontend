@@ -260,6 +260,7 @@ const Portfolio: React.FC = () => {
               fetchPortfolios();
             }}
             currentPortfolio={selectedPortfolio}
+            defaultParentPortfolio={currentPortfolio}
             onCancelUpdate={() => setSelectedPortfolio({} as IPortfolio)}
           />
         </Stack>

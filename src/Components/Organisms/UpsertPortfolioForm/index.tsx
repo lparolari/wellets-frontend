@@ -23,9 +23,11 @@ import upsertPortfolio from 'Schemas/upsertPortfolio';
 import IWallet from 'Entities/IWallet';
 import { IOption } from 'Components/Atoms/Select';
 import Select from 'Components/Atoms/BetterSelect';
+import Switch from 'Components/Atoms/Switch';
 
 interface IProps {
   currentPortfolio: IPortfolio;
+  defaultParentPortfolio?: IPortfolio;
   onSuccess?: () => void;
   onCancelUpdate?: () => void;
 }
@@ -33,6 +35,7 @@ interface IProps {
 const UpsertPortfolioForm: React.FC<IProps> = ({
   onSuccess,
   currentPortfolio,
+  defaultParentPortfolio,
   onCancelUpdate,
 }) => {
   const toast = useToast();
@@ -198,12 +201,27 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
           />
         </Skeleton>
         <Skeleton isLoaded={!loadingFetchPortfolios}>
-          <Select
-            name="parent"
-            placeholder="Select a portfolio"
-            options={portfoliosOptions}
-            helper="Parent portfolio - do not set for root portfolios"
-          />
+          <Stack direction={'row'}>
+            <Select
+              name="parent"
+              placeholder="Select a portfolio"
+              options={portfoliosOptions}
+              helper="Parent portfolio - do not set for root portfolios"
+            />
+            {defaultParentPortfolio && defaultParentPortfolio.id && (
+              <Button
+                variant={'ghost'}
+                onClick={() =>
+                  formRef.current?.setFieldValue(
+                    'parent',
+                    portfolioToOption(defaultParentPortfolio),
+                  )
+                }
+              >
+                Set {defaultParentPortfolio.alias}
+              </Button>
+            )}
+          </Stack>
         </Skeleton>
         <Stack spacing="10px">
           <Button

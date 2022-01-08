@@ -86,7 +86,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
   const fetchPortfolios = useCallback(async () => {
     try {
       setLoadingFetchPortfolios(true);
-      const response = await api.get('/portfolios');
+      const response = await api.get('/portfolios/all');
       setPortfolios(response.data);
       setLoadingFetchPortfolios(false);
     } catch (err) {
@@ -170,7 +170,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
 
   useEffect(() => {
     fetchPortfolios();
-  }, [currentPortfolio]);
+  }, []);
 
   useEffect(() => {
     fetchWallets();

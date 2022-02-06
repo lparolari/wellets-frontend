@@ -16,7 +16,7 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
-import { FiCornerLeftUp } from 'react-icons/fi';
+import { FiCheckCircle, FiCornerLeftUp } from 'react-icons/fi';
 import { useHistory, useParams } from 'react-router-dom';
 
 import PageContainer from 'Components/Atoms/PageContainer';
@@ -220,22 +220,38 @@ const Portfolio: React.FC = () => {
 
               <Box>
                 <Flex justifyContent="end">
-                  {currentPortfolio.id && (
-                    <IconButton
+                  <Stack direction="row" spacing="12px">
+                    <Button
                       onClick={() =>
                         history.push(
-                          `/portfolios${
-                            currentPortfolio.parent
-                              ? '/' + currentPortfolio.parent.id
-                              : ''
-                          }`,
+                          `/portfolios/${
+                            currentPortfolio.id ? currentPortfolio.id + '/' : ''
+                          }rebalance`,
                         )
                       }
-                      variant="outline"
-                      aria-label="Back"
-                      icon={<FiCornerLeftUp />}
-                    />
-                  )}
+                      rightIcon={<FiCheckCircle />}
+                    >
+                      Rebalance
+                    </Button>
+                    {currentPortfolio.id && (
+                      <Button
+                        onClick={() =>
+                          history.push(
+                            `/portfolios${
+                              currentPortfolio.parent
+                                ? '/' + currentPortfolio.parent.id
+                                : ''
+                            }`,
+                          )
+                        }
+                        variant="outline"
+                        aria-label="Back"
+                        rightIcon={<FiCornerLeftUp />}
+                      >
+                        Back to parent
+                      </Button>
+                    )}
+                  </Stack>
                 </Flex>
               </Box>
             </SimpleGrid>

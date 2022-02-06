@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   Stack,
   Heading,
@@ -8,6 +8,13 @@ import {
   Skeleton,
   Box,
   Link,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Menu,
+  LinkOverlay,
+  MenuGroup,
+  MenuDivider,
 } from '@chakra-ui/react';
 import { PieChart, Pie, LabelList, Tooltip } from 'recharts';
 
@@ -45,6 +52,7 @@ const Portfolio: React.FC = () => {
       direction: 'row' as StackDirection,
     },
   });
+  const history = useHistory();
 
   const [portfolio, setPortfolio] = useState({} as IPortfolio);
   const [allocation, setAllocation] = useState({} as IAllocation);
@@ -115,7 +123,10 @@ const Portfolio: React.FC = () => {
 
       <ContentContainer flexDirection="column" justifyContent="start">
         <Skeleton isLoaded={!loadingFetchPortfolio}>
-          <Heading>{`Rebalance ${portfolio?.alias}`}</Heading>
+          <Heading>
+            Rebalance{' '}
+            <Link href={`/portfolios/${portfolio.id}`}>{portfolio.alias}</Link>
+          </Heading>
         </Skeleton>
 
         <Stack
@@ -134,12 +145,51 @@ const Portfolio: React.FC = () => {
                   key: 'alias',
                   render(x: IChange) {
                     return (
-                      <Link
-                        href={`/portfolios/${x.portfolio.id}/rebalance`}
-                        key={x.portfolio.id}
-                      >
-                        {x.portfolio.alias}
-                      </Link>
+                      <>
+                        <Link
+                          href={`/portfolios/${x.portfolio.id}`}
+                          key={x.portfolio.id}
+                        >
+                          {x.portfolio.alias}
+                        </Link>{' '}
+                        <Menu>
+                          <MenuButton as={Link}>
+                            ({x.portfolio.wallets.length})
+                          </MenuButton>
+                          <MenuList>
+                            {x.portfolio.wallets.length ? (
+                              <>
+                                <MenuGroup>
+                                  {x.portfolio.wallets.map(w => (
+                                    <MenuItem
+                                      key={w.id}
+                                      onClick={() =>
+                                        history.push(`/wallets/${w.id}`)
+                                      }
+                                    >
+                                      {w.alias}
+                                    </MenuItem>
+                                  ))}
+                                </MenuGroup>
+                                <MenuDivider />
+                                <MenuGroup>
+                                  <MenuItem
+                                    onClick={() =>
+                                      history.push(
+                                        `/wallets/?portfolio_id=${x.portfolio.id}`,
+                                      )
+                                    }
+                                  >
+                                    Show all
+                                  </MenuItem>
+                                </MenuGroup>
+                              </>
+                            ) : (
+                              <MenuItem isDisabled>No wallets</MenuItem>
+                            )}
+                          </MenuList>
+                        </Menu>
+                      </>
                     );
                   },
                 },

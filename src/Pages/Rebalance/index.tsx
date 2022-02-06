@@ -28,6 +28,7 @@ import ICurrency from 'Entities/ICurrency';
 import IPortfolio from 'Entities/IPortfolio';
 import IBalancedPortfolio from 'Entities/IBalancedPortfolio';
 import formataBalance from 'Helpers/formatBalance';
+import IAllocation, { IChange } from 'Entities/IAllocation';
 
 interface IParams {
   id: string;
@@ -46,30 +47,35 @@ const Portfolio: React.FC = () => {
   });
 
   const [portfolio, setPortfolio] = useState({} as IPortfolio);
-  const [balanced, setBalanced] = useState([] as IBalancedPortfolio[]);
-  const [baseCurrency, setBaseCurrency] = useState({} as ICurrency);
+  const [allocation, setAllocation] = useState({} as IAllocation);
+
   const [loadingFetchPortfolio, setLoadingFetchPortfolio] = useState(false);
-  const [loadingFetchBalanced, setLoadingFetchBalanced] = useState(false);
+  const [loadingFetchAllocation, setLoadingFetchAllocation] = useState(false);
 
   const targetPercentageData = useMemo(
     () =>
-      balanced.map(p => ({ name: p.alias, value: formatPercentage(p.weight) })),
-    [balanced],
+      allocation.changes &&
+      allocation.changes.map(a => ({
+        name: a.portfolio.alias,
+        value: formatPercentage(a.portfolio.weight),
+      })),
+    [allocation],
   );
   const actualBalanceData = useMemo(
     () =>
-      balanced.map(p => ({
-        name: p.alias,
-        value: p.actual_value,
+      allocation.changes &&
+      allocation.changes.map(a => ({
+        name: a.portfolio.alias,
+        value: a.actual,
       })),
-    [balanced],
+    [allocation],
   );
 
   const fetchPortfolio = useCallback(
     async (id: string) => {
       try {
         setLoadingFetchPortfolio(true);
-        const response = await api.get(`/portfolios/${id}`);
+        const response = await api.get(`/portfolios/${id}/details`);
         setPortfolio(response.data);
       } catch (err) {
         handleErrors('Error when fetching portfolio', err);
@@ -80,17 +86,16 @@ const Portfolio: React.FC = () => {
     [handleErrors],
   );
 
-  const fetchBalanced = useCallback(
+  const fetchAllocation = useCallback(
     async (id: string) => {
       try {
-        setLoadingFetchBalanced(true);
+        setLoadingFetchAllocation(true);
         const response = await api.get(`/portfolios/${id}/rebalance`);
-        setBalanced(response.data.balanced_portfolios);
-        setBaseCurrency(response.data.base_currency);
+        setAllocation(response.data);
       } catch (err) {
         handleErrors('Error when rebalancing portfolios', err);
       } finally {
-        setLoadingFetchBalanced(false);
+        setLoadingFetchAllocation(false);
       }
     },
     [handleErrors],
@@ -101,8 +106,8 @@ const Portfolio: React.FC = () => {
   }, [params.id, fetchPortfolio]);
 
   useEffect(() => {
-    fetchBalanced(params.id);
-  }, [params.id, fetchBalanced]);
+    fetchAllocation(params.id);
+  }, [params.id, fetchAllocation]);
 
   return (
     <PageContainer>
@@ -110,7 +115,7 @@ const Portfolio: React.FC = () => {
 
       <ContentContainer flexDirection="column" justifyContent="start">
         <Skeleton isLoaded={!loadingFetchPortfolio}>
-          <Heading>{`Rebalance ${portfolio.alias}`}</Heading>
+          <Heading>{`Rebalance ${portfolio?.alias}`}</Heading>
         </Skeleton>
 
         <Stack
@@ -120,17 +125,20 @@ const Portfolio: React.FC = () => {
           spacing="25px"
           justifyContent="center"
         >
-          <Skeleton isLoaded={!loadingFetchBalanced}>
+          <Skeleton isLoaded={!loadingFetchAllocation}>
             <Table
-              rows={balanced}
+              rows={allocation.changes || []}
               columns={[
                 {
                   title: 'Portfolio',
                   key: 'alias',
-                  render(x: IBalancedPortfolio) {
+                  render(x: IChange) {
                     return (
-                      <Link href={`/portfolios/${x.id}/rebalance`} key={x.id}>
-                        {x.alias}
+                      <Link
+                        href={`/portfolios/${x.portfolio.id}/rebalance`}
+                        key={x.portfolio.id}
+                      >
+                        {x.portfolio.alias}
                       </Link>
                     );
                   },
@@ -138,18 +146,18 @@ const Portfolio: React.FC = () => {
                 {
                   title: 'Weight',
                   key: 'weight',
-                  render(x: IBalancedPortfolio) {
-                    return `${Number(x.weight * 100).toFixed(0)}%`;
+                  render(x: IChange) {
+                    return `${Number(x.portfolio.weight * 100).toFixed(0)}%`;
                   },
                 },
                 {
                   title: 'Target',
                   key: 'target',
-                  render(x: IBalancedPortfolio) {
+                  render(x: IChange) {
                     return (
                       <Balance
-                        balance={x.target_value}
-                        currency={baseCurrency.acronym}
+                        balance={x.target}
+                        currency={allocation.base_currency.acronym}
                       />
                     );
                   },
@@ -157,11 +165,11 @@ const Portfolio: React.FC = () => {
                 {
                   title: 'Actual',
                   key: 'actual',
-                  render(x: IBalancedPortfolio) {
+                  render(x: IChange) {
                     return (
                       <Balance
-                        balance={x.actual_value}
-                        currency={baseCurrency.acronym}
+                        balance={x.actual}
+                        currency={allocation.base_currency.acronym}
                       />
                     );
                   },
@@ -169,21 +177,21 @@ const Portfolio: React.FC = () => {
                 {
                   title: 'Off By',
                   key: 'off_by',
-                  render(x: IBalancedPortfolio) {
+                  render(x: IChange) {
                     return `${Number(x.off_by * 100).toFixed(0)}%`;
                   },
                 },
                 {
                   title: 'Rebalance',
                   key: 'rebalance',
-                  render(x: IBalancedPortfolio) {
+                  render(x: IChange) {
                     return (
                       <>
-                        {x.off_by > 0 ? 'Sell' : 'Buy'}
+                        {x.action.type === 'sell' ? 'Sell' : 'Buy'}
                         <Space />
                         <Balance
-                          balance={x.rebalance_amount}
-                          currency={baseCurrency.acronym}
+                          balance={x.action.amount}
+                          currency={allocation.base_currency.acronym}
                         />
                       </>
                     );
@@ -193,7 +201,9 @@ const Portfolio: React.FC = () => {
             />
           </Skeleton>
 
-          <Skeleton isLoaded={!loadingFetchBalanced && !loadingFetchPortfolio}>
+          <Skeleton
+            isLoaded={!loadingFetchAllocation && !loadingFetchPortfolio}
+          >
             <Box>
               <PieChart height={250} width={400}>
                 <Pie
@@ -225,7 +235,7 @@ const Portfolio: React.FC = () => {
                   labelLine
                   label={cell =>
                     formataBalance(cell.value, undefined, {
-                      currency: baseCurrency.acronym || 'UNK',
+                      currency: allocation.base_currency.acronym || 'UNK',
                     })
                   }
                 />

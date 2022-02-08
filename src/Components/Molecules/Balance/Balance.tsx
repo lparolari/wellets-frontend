@@ -1,5 +1,7 @@
 import React from 'react';
 
+import formatBalance from 'Helpers/formatBalance';
+
 type IProps = {
   balance?: number;
   dollar_rate?: number;
@@ -23,7 +25,7 @@ const Balance: React.FC<IProps> = ({
   try {
     return (
       <>
-        {finalBalance.toLocaleString(locales, {
+        {formatBalance(finalBalance, locales, {
           style,
           currency,
           currencyDisplay,

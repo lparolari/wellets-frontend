@@ -35,11 +35,7 @@ import ICurrency from 'Entities/ICurrency';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
 import Balance from 'Components/Molecules/Balance/Balance';
-import {
-  getCurrency,
-  getCurrencyDollarRate,
-  getCurrencyName,
-} from 'Helpers/getCurrency';
+import { getCurrencyDollarRate, getCurrencyName } from 'Helpers/getCurrency';
 import Space from 'Components/Atoms/Space/Space';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 
@@ -67,9 +63,8 @@ const Wallet: React.FC = () => {
   const [loadingFetchWallet, setLoadingFetchWallet] = useState(true);
   const [loadingFetchCurrencies, setLoadingFetchCurrencies] = useState(true);
   const [loadingFetchBalance, setLoadingFetchBalance] = useState(true);
-  const [loadingFetchUserSettings, setLoadingFetchUserSettings] = useState(
-    true,
-  );
+  const [loadingFetchUserSettings, setLoadingFetchUserSettings] =
+    useState(true);
   const [targetCurrencyId, setTargetCurrencyId] = useState('');
   const [baseCurrencyId, setBaseCurrencyId] = useState('');
   const [balance, setBalance] = useState(0);

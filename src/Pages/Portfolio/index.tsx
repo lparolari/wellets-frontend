@@ -221,35 +221,39 @@ const Portfolio: React.FC = () => {
               <Box>
                 <Flex justifyContent="end">
                   <Stack direction="row" spacing="12px">
-                    <Button
-                      onClick={() =>
-                        history.push(
-                          `/portfolios/${
-                            currentPortfolio.id ? currentPortfolio.id + '/' : ''
-                          }rebalance`,
-                        )
-                      }
-                      rightIcon={<FiCheckCircle />}
-                    >
-                      Rebalance
-                    </Button>
                     {currentPortfolio.id && (
-                      <Button
-                        onClick={() =>
-                          history.push(
-                            `/portfolios${
-                              currentPortfolio.parent
-                                ? '/' + currentPortfolio.parent.id
-                                : ''
-                            }`,
-                          )
-                        }
-                        variant="outline"
-                        aria-label="Back"
-                        rightIcon={<FiCornerLeftUp />}
-                      >
-                        Back to parent
-                      </Button>
+                      <>
+                        <Button
+                          onClick={() =>
+                            history.push(
+                              `/portfolios/${
+                                currentPortfolio.id
+                                  ? currentPortfolio.id + '/'
+                                  : ''
+                              }rebalance`,
+                            )
+                          }
+                          rightIcon={<FiCheckCircle />}
+                        >
+                          Rebalance
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            history.push(
+                              `/portfolios${
+                                currentPortfolio.parent
+                                  ? '/' + currentPortfolio.parent.id
+                                  : ''
+                              }`,
+                            )
+                          }
+                          variant="outline"
+                          aria-label="Back"
+                          rightIcon={<FiCornerLeftUp />}
+                        >
+                          Back to parent
+                        </Button>
+                      </>
                     )}
                   </Stack>
                 </Flex>

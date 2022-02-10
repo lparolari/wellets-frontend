@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 import {
   useToast,
   LinkBox,
@@ -43,6 +45,8 @@ import api from 'Services/api';
 const Wallets: React.FC = () => {
   const { handleErrors } = useErrors();
   const history = useHistory();
+  const { search } = useLocation();
+  const { portfolio_id } = queryString.parse(search);
 
   const toast = useToast();
   const stack = useBreakpointValue({
@@ -61,12 +65,10 @@ const Wallets: React.FC = () => {
   const [loadingDeleteWallet, setLoadingDeleteWallet] = useState(false);
   const [loadingFetchWallets, setLoadingFetchWallets] = useState(false);
   const [loadingFetchCurrencies, setLoadingFetchCurrencies] = useState(false);
-  const [loadingFetchTotalBalance, setLoadingFetchTotalBalance] = useState(
-    false,
-  );
-  const [loadingFetchUserSettings, setLoadingFetchUserSettings] = useState(
-    false,
-  );
+  const [loadingFetchTotalBalance, setLoadingFetchTotalBalance] =
+    useState(false);
+  const [loadingFetchUserSettings, setLoadingFetchUserSettings] =
+    useState(false);
   const [baseCurrencyId, setBaseCurrencyId] = useState('');
   const [totalBalance, setTotalBalance] = useState(0);
 
@@ -88,6 +90,7 @@ const Wallets: React.FC = () => {
         params: {
           page,
           limit,
+          portfolio_id,
         },
       });
       setWallets(response.data.wallets);
@@ -97,7 +100,7 @@ const Wallets: React.FC = () => {
     } finally {
       setLoadingFetchWallets(false);
     }
-  }, [page, limit, handleErrors]);
+  }, [page, limit, portfolio_id, handleErrors]);
 
   const fetchCurrencies = useCallback(async () => {
     try {
@@ -316,8 +319,7 @@ const Wallets: React.FC = () => {
                           isLoading={loadingDeleteWallet}
                           onClick={() => handleDeleteWallet(wallet.id)}
                           confirmation={{
-                            body:
-                              'Are you sure you want to delete this wallet? All data attached to it will be lost.',
+                            body: 'Are you sure you want to delete this wallet? All data attached to it will be lost.',
                             buttonText: 'I am sure',
                             colorSchema: 'red',
                           }}

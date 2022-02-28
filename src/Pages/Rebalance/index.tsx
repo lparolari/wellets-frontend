@@ -12,7 +12,6 @@ import {
   MenuList,
   MenuItem,
   Menu,
-  LinkOverlay,
   MenuGroup,
   MenuDivider,
 } from '@chakra-ui/react';
@@ -31,9 +30,7 @@ import Balance from 'Components/Molecules/Balance/Balance';
 import Table from 'Components/Molecules/Table';
 import Header from 'Components/Organisms/Header';
 
-import ICurrency from 'Entities/ICurrency';
 import IPortfolio from 'Entities/IPortfolio';
-import IBalancedPortfolio from 'Entities/IBalancedPortfolio';
 import formataBalance from 'Helpers/formatBalance';
 import IAllocation, { IChange } from 'Entities/IAllocation';
 

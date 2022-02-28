@@ -9,7 +9,6 @@ import {
   Flex,
   useToast,
   LinkOverlay,
-  IconButton,
   Box,
   SimpleGrid,
   Stat,
@@ -61,6 +60,7 @@ const Portfolio: React.FC = () => {
   const [loadingFetchUserSettings, setLoadingFetchUserSettings] =
     useState(false);
   const [loadingFetchPortfolios, setLoadingFetchPortfolios] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loadingFetchPortfolio, setLoadingFetchPortfolio] = useState(false);
   const [loadingFetchPortfolioBalance, setLoadingFetchPortfolioBalance] =
     useState(false);
@@ -97,7 +97,7 @@ const Portfolio: React.FC = () => {
         setLoadingFetchPortfolio(false);
       }
     },
-    [params, handleErrors],
+    [handleErrors],
   );
 
   const fetchPortfolioBalance = useCallback(
@@ -114,7 +114,7 @@ const Portfolio: React.FC = () => {
         setLoadingFetchPortfolioBalance(false);
       }
     },
-    [params, handleErrors],
+    [handleErrors],
   );
 
   const fetchCurrentPortfolio = useCallback(async () => {
@@ -168,7 +168,7 @@ const Portfolio: React.FC = () => {
     } finally {
       setLoadingFetchUserSettings(false);
     }
-  }, []);
+  }, [handleErrors]);
 
   useEffect(() => {
     fetchPortfolios();

@@ -23,7 +23,6 @@ import upsertPortfolio from 'Schemas/upsertPortfolio';
 import IWallet from 'Entities/IWallet';
 import { IOption } from 'Components/Atoms/Select';
 import Select from 'Components/Atoms/BetterSelect';
-import Switch from 'Components/Atoms/Switch';
 
 interface IProps {
   currentPortfolio: IPortfolio;
@@ -175,7 +174,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
 
   useEffect(() => {
     fetchPortfolios();
-  }, []);
+  }, [fetchPortfolios]);
 
   useEffect(() => {
     fetchWallets();

@@ -1,20 +1,13 @@
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import PageContainer from 'Components/Atoms/PageContainer';
 import Header from 'Components/Organisms/Header';
-import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
 import { useErrors } from 'Hooks/errors';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from 'Services/api';
 
-import {
-  Box,
-  Heading,
-  Skeleton,
-  StackDirection,
-  useBreakpointValue,
-} from '@chakra-ui/react';
+import { Box, Heading, Skeleton } from '@chakra-ui/react';
 import {
   Area,
   AreaChart,
@@ -37,14 +30,6 @@ const WalletDetails: React.FC = () => {
   const { handleErrors } = useErrors();
 
   const params = useParams<IParams>();
-  const stack = useBreakpointValue({
-    base: {
-      direction: 'column' as StackDirection,
-    },
-    lg: {
-      direction: 'row' as StackDirection,
-    },
-  });
 
   const [wallet, setWallet] = useState({} as IWallet);
   const [walletHistory, setWalletHistory] = useState([] as IWalletHistory[]);

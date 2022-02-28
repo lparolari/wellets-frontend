@@ -12,7 +12,7 @@ const getAuthToken = (): string | null => {
 
 const backendURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://wellets-api.ondaniel.com.br'
+    ? 'https://wellets-backend.herokuapp.com'
     : 'http://localhost:3333';
 
 const api = axios.create({

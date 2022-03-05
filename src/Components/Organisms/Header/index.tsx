@@ -22,6 +22,7 @@ import { FiUser, FiMenu, FiX } from 'react-icons/fi';
 import { useAuth } from 'Hooks/auth';
 import NavLink from '../../Atoms/NavLink/NavLink';
 import Links from '../../Molecules/HeaderLinks/HeaderLinks';
+import { SyncCurrenciesButton } from 'Components/Molecules/SyncCurrenciesButton/SyncCurrenciesButton';
 
 interface IProps {
   color?: string;
@@ -52,6 +53,7 @@ const Header: React.FC<IProps> = ({ color }) => {
             </HStack>
           </HStack>
           <Flex alignItems="center">
+            <SyncCurrenciesButton />
             <Menu>
               <MenuButton
                 as={Button}

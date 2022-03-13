@@ -1,25 +1,33 @@
-import React, { useMemo, useState } from 'react';
 import {
-  Input as BaseInput,
+  Button,
   FormControl,
   FormHelperText,
-  InputProps,
   FormLabel,
+  Input as BaseInput,
   InputGroup,
+  InputProps,
   InputRightElement,
-  Button,
 } from '@chakra-ui/react';
-
 import { useField } from 'formik';
+import React, { useMemo, useState } from 'react';
+
 import InputError from '../InputError';
 
 interface IProps extends InputProps {
   name: string;
   label?: string;
   helper?: string;
+  rightElement?: React.ReactNode;
 }
 
-const Input: React.FC<IProps> = ({ name, label, helper, type, ...rest }) => {
+const Input: React.FC<IProps> = ({
+  name,
+  label,
+  helper,
+  type,
+  rightElement,
+  ...rest
+}) => {
   // Custom hooks
   const [field, meta, helpers] = useField(name);
 
@@ -52,6 +60,7 @@ const Input: React.FC<IProps> = ({ name, label, helper, type, ...rest }) => {
           step={type === 'number' ? '0.000000000000001' : ''}
           {...rest}
         />
+        {!error && rightElement}
         {type === 'password' && error && touched && (
           <InputRightElement width="4.5rem">
             <Button

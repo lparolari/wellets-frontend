@@ -25,7 +25,9 @@
     "react",
     "react-hooks",
     "prettier",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "simple-import-sort",
+    "import"
   ],
   "rules": {
     "@typescript-eslint/no-empty-function": "off",

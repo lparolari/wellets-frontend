@@ -11,5 +11,6 @@ export default Yup.object().shape({
       ['incoming', 'outcoming'],
       'you must specify if the transaction is a incoming or a outcoming',
     )
-    .required('description required'),
+    .required('type required'),
+  base_rate: Yup.number().typeError("value must be a number").positive("value must be positive")
 });

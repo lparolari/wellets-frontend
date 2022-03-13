@@ -35,7 +35,7 @@ import ICurrency from 'Entities/ICurrency';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
 import Balance from 'Components/Molecules/Balance/Balance';
-import { getCurrencyDollarRate, getCurrencyName } from 'Helpers/getCurrency';
+import { getCurrency, getCurrencyDollarRate, getCurrencyName } from 'Helpers/getCurrency';
 import Space from 'Components/Atoms/Space/Space';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 
@@ -242,6 +242,8 @@ const Wallet: React.FC = () => {
                     <CreateTransactionForm
                       wallet={wallet}
                       currencies={currencies}
+                      targetCurrency={getCurrency(currencies, targetCurrencyId)}
+                      baseCurrency={getCurrency(currencies, baseCurrencyId)}
                       onSuccess={() => {
                         setUpdateTransactions(updateTransactions + 1);
                         fetchWallet();

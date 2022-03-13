@@ -1,3 +1,4 @@
+import { Box, Heading, Skeleton } from '@chakra-ui/react';
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import PageContainer from 'Components/Atoms/PageContainer';
 import Header from 'Components/Organisms/Header';
@@ -5,9 +6,6 @@ import IWallet from 'Entities/IWallet';
 import { useErrors } from 'Hooks/errors';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from 'Services/api';
-
-import { Box, Heading, Skeleton } from '@chakra-ui/react';
 import {
   Area,
   AreaChart,
@@ -16,6 +14,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import api from 'Services/api';
 
 interface IParams {
   id: string;

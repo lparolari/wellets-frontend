@@ -1,5 +1,5 @@
-import IUser from './IUser';
 import ICurrency from './ICurrency';
+import IUser from './IUser';
 
 interface IUserSettings {
   id: string;

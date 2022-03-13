@@ -45,7 +45,8 @@
     "dev": "react-scripts start NODE_ENV=development",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "eslint --ext .ts,.tsx src/**/*.{ts,tsx}",
+    "lint": "eslint --ext .ts,.tsx src",
+    "lint:fix": "eslint --ext .ts,.tsx src --fix",
     "eject": "react-scripts eject"
   },
   "browserslist": {

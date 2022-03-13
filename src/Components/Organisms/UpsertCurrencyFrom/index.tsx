@@ -1,19 +1,15 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { FormHandles } from '@unform/core';
 import { Box, Stack, useToast } from '@chakra-ui/react';
-
+import { FormHandles } from '@unform/core';
+import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form';
 import Input from 'Components/Atoms/Input';
 import Radio from 'Components/Atoms/Radio';
-import Button from 'Components/Atoms/Button';
-
-import { useErrors } from 'Hooks/errors';
-
-import ICurrency from 'Entities/ICurrency';
 import IUpsertCurrencyDTO from 'DTOs/IUpsertCurrencyDTO';
-
-import api from 'Services/api';
+import ICurrency from 'Entities/ICurrency';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import upsertCurrency from 'Schemas/upsertCurrency';
+import api from 'Services/api';
 
 interface IProps {
   currentCurrency: ICurrency;

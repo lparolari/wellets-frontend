@@ -1,21 +1,18 @@
-import React, { useCallback, useMemo } from 'react';
 import { Box, useToast } from '@chakra-ui/react';
-import { Formik } from 'formik';
-
+import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form2';
 import Input from 'Components/Atoms/Input2';
 import Radio from 'Components/Atoms/Radio2';
-import Button from 'Components/Atoms/Button';
-
-import { useErrors } from 'Hooks/errors';
-
+import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
 import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
-
-import api from 'Services/api';
-import createTransaction from 'Schemas/createTransaction';
+import { Formik } from 'formik';
 import { getCurrencyName } from 'Helpers/getCurrency';
-import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useMemo } from 'react';
+import createTransaction from 'Schemas/createTransaction';
+import api from 'Services/api';
+
 import BaseRate from './BaseRate';
 
 interface ICreateTransaction {

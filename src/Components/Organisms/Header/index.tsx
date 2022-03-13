@@ -1,26 +1,26 @@
-import React from 'react';
 import {
+  Avatar,
   Box,
-  Flex,
-  Icon,
-  HStack,
-  IconButton,
   Button,
+  Flex,
+  HStack,
+  Icon,
+  IconButton,
   Menu,
   MenuButton,
-  MenuList,
-  MenuItem,
   MenuDivider,
-  useDisclosure,
-  useColorModeValue,
+  MenuItem,
+  MenuList,
   Stack,
-  Avatar,
+  useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
-import { FiUser, FiMenu, FiX } from 'react-icons/fi';
-
-import { useAuth } from 'Hooks/auth';
 import { SyncCurrenciesButton } from 'Components/Molecules/SyncCurrenciesButton/SyncCurrenciesButton';
+import { useAuth } from 'Hooks/auth';
+import React from 'react';
+import { FiMenu, FiUser, FiX } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
+
 import NavLink from '../../Atoms/NavLink/NavLink';
 import Links from '../../Molecules/HeaderLinks/HeaderLinks';
 

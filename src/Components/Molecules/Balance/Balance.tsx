@@ -1,6 +1,5 @@
-import React, { Fragment } from 'react';
-
 import formatBalance from 'Helpers/formatBalance';
+import React, { Fragment } from 'react';
 
 type IProps = {
   balance?: number;

@@ -1,12 +1,13 @@
-import React from 'react';
 import {
-  Stack,
-  RadioGroup,
   Radio as BaseRadio,
-  StackDirection,
+  RadioGroup,
   RadioProps,
+  Stack,
+  StackDirection,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
+import React from 'react';
+
 import InputError from '../InputError';
 
 interface IProps {

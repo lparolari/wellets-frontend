@@ -1,6 +1,3 @@
-import React from 'react';
-import { FiGithub } from 'react-icons/fi';
-
 import {
   Box,
   Flex,
@@ -10,6 +7,8 @@ import {
   LinkOverlay,
   Text,
 } from '@chakra-ui/react';
+import React from 'react';
+import { FiGithub } from 'react-icons/fi';
 
 const Sponsors: React.FC = () => (
   <Box h="100%" w="100%" maxW="400px" bg="green.300" borderStartRadius="5px">

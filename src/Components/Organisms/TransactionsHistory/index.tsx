@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Skeleton } from '@chakra-ui/react';
-
-import Table from 'Components/Molecules/Table';
 import Balance from 'Components/Molecules/Balance/Balance';
-
+import Table from 'Components/Molecules/Table';
 import ITransaction from 'Entities/ITransaction';
-import formatDate from 'Helpers/formatDate';
-import api from 'Services/api';
-import { useErrors } from 'Hooks/errors';
 import compareDate from 'Helpers/compareDate';
+import formatDate from 'Helpers/formatDate';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import api from 'Services/api';
 
 interface IProps {
   walletId: string;

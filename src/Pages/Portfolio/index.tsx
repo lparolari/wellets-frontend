@@ -1,37 +1,33 @@
-import React, { useState, useCallback, useEffect } from 'react';
 import {
-  Stack,
-  Heading,
-  useBreakpointValue,
-  StackDirection,
-  Skeleton,
-  Link,
-  Flex,
-  useToast,
-  LinkOverlay,
   Box,
+  Flex,
+  Heading,
+  Link,
+  LinkOverlay,
   SimpleGrid,
+  Skeleton,
+  Stack,
+  StackDirection,
   Stat,
   StatLabel,
   StatNumber,
+  useBreakpointValue,
+  useToast,
 } from '@chakra-ui/react';
+import Button from 'Components/Atoms/Button';
+import ContentContainer from 'Components/Atoms/ContentContainer';
+import PageContainer from 'Components/Atoms/PageContainer';
+import Balance from 'Components/Molecules/Balance/Balance';
+import Table from 'Components/Molecules/Table';
+import Header from 'Components/Organisms/Header';
+import UpsertPortfolioForm from 'Components/Organisms/UpsertPortfolioForm';
+import IPortfolio from 'Entities/IPortfolio';
+import IUserSettings from 'Entities/IUserSettings';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiCheckCircle, FiCornerLeftUp } from 'react-icons/fi';
 import { useHistory, useParams } from 'react-router-dom';
-
-import PageContainer from 'Components/Atoms/PageContainer';
-import ContentContainer from 'Components/Atoms/ContentContainer';
-import Header from 'Components/Organisms/Header';
-import Table from 'Components/Molecules/Table';
-import UpsertPortfolioForm from 'Components/Organisms/UpsertPortfolioForm';
-
-import { useErrors } from 'Hooks/errors';
-
-import IPortfolio from 'Entities/IPortfolio';
-
 import api from 'Services/api';
-import Button from 'Components/Atoms/Button';
-import Balance from 'Components/Molecules/Balance/Balance';
-import IUserSettings from 'Entities/IUserSettings';
 
 interface IParams {
   parent_id: string;

@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
 import { Box, BoxProps } from '@chakra-ui/react';
+import React, { useCallback, useState } from 'react';
 
 import { LeftButton, RightButton } from './styles';
 

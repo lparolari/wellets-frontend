@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
-  Stack,
   Center,
   Heading,
   SlideFade,
+  Stack,
   useBreakpointValue,
 } from '@chakra-ui/react';
-
-import Switch from 'Components/Atoms/Switch';
-import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
-import Sponsors from 'Components/Organisms/Sponsors';
+import PageContainer from 'Components/Atoms/PageContainer';
+import Switch from 'Components/Atoms/Switch';
 import SignInForm from 'Components/Organisms/SignInForm';
 import SignUpForm from 'Components/Organisms/SignUpForm';
+import Sponsors from 'Components/Organisms/Sponsors';
+import React, { useCallback, useEffect, useState } from 'react';
 
 type IAvailableForms = 'SignIn' | 'SignUp';
 

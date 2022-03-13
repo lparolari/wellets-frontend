@@ -1,6 +1,6 @@
-import React from 'react';
-import { Stack, Heading } from '@chakra-ui/react';
+import { Heading, Stack } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
+import React from 'react';
 
 interface IProps {
   title?: string;

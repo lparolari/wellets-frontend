@@ -1,44 +1,39 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
-import queryString from 'query-string';
 import {
-  useToast,
+  Box,
+  Flex,
+  Heading,
+  IconButton,
   LinkBox,
   LinkOverlay,
-  Flex,
-  Stack,
-  Heading,
-  useBreakpointValue,
-  StackDirection,
+  SimpleGrid,
   Skeleton,
-  IconButton,
+  Stack,
+  StackDirection,
   Stat,
   StatLabel,
   StatNumber,
-  Box,
-  SimpleGrid,
+  useBreakpointValue,
+  useToast,
 } from '@chakra-ui/react';
-import { FiRefreshCw } from 'react-icons/fi';
-
 import Button from 'Components/Atoms/Button';
-import Form from 'Components/Atoms/Form';
-import Select, { IOption } from 'Components/Atoms/Select';
-import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
-import Table from 'Components/Molecules/Table';
-import CreateWalletForm from 'Components/Organisms/CreateWalletForm';
-import Header from 'Components/Organisms/Header';
+import Form from 'Components/Atoms/Form';
+import PageContainer from 'Components/Atoms/PageContainer';
+import Select, { IOption } from 'Components/Atoms/Select';
 import Space from 'Components/Atoms/Space/Space';
 import Balance from 'Components/Molecules/Balance/Balance';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
-
-import { useErrors } from 'Hooks/errors';
-
+import Table from 'Components/Molecules/Table';
+import CreateWalletForm from 'Components/Organisms/CreateWalletForm';
+import Header from 'Components/Organisms/Header';
 import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
-
 import { getCurrency, getCurrencyName } from 'Helpers/getCurrency';
-
+import { useErrors } from 'Hooks/errors';
+import queryString from 'query-string';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FiRefreshCw } from 'react-icons/fi';
+import { useHistory, useLocation } from 'react-router-dom';
 import api from 'Services/api';
 
 const Wallets: React.FC = () => {

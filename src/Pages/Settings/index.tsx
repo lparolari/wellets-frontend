@@ -1,15 +1,14 @@
-import React from 'react';
 import {
-  Stack,
   Heading,
-  useBreakpointValue,
+  Stack,
   StackDirection,
+  useBreakpointValue,
 } from '@chakra-ui/react';
-
-import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
-import UserSettingsForm from 'Components/Organisms/UserSettingsForm';
+import PageContainer from 'Components/Atoms/PageContainer';
 import Header from 'Components/Organisms/Header';
+import UserSettingsForm from 'Components/Organisms/UserSettingsForm';
+import React from 'react';
 
 const Settings: React.FC = () => {
   const stack = useBreakpointValue({

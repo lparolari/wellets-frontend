@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
 import { Link, useColorModeValue } from '@chakra-ui/react';
+import React, { ReactNode } from 'react';
 import { Link as RRDLink } from 'react-router-dom';
 
 interface IProps {

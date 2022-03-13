@@ -49,21 +49,19 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
   const [loadingFetchWallets, setLoadingFetchWallets] = useState(false);
   const [loadingFetchPortfolios, setLoadingFetchPortfolios] = useState(false);
 
-  const portfolioToOption = (portfolio: IPortfolio) => {
-    return {
+  const portfolioToOption = (portfolio: IPortfolio) =>
+    ({
       value: portfolio.id,
       label: `${portfolio.alias} ${
         !portfolio.parent ? '(root)' : `(${portfolio.parent.alias})`
       }`,
-    } as IOption;
-  };
+    } as IOption);
 
-  const walletToOption = (wallet: IWallet) => {
-    return {
+  const walletToOption = (wallet: IWallet) =>
+    ({
       value: wallet.id,
       label: `${wallet.alias}`,
-    } as IOption;
-  };
+    } as IOption);
 
   const portfoliosOptions = useMemo(
     () => portfolios.map(portfolioToOption),
@@ -200,7 +198,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
           />
         </Skeleton>
         <Skeleton isLoaded={!loadingFetchPortfolios}>
-          <Stack direction={'row'}>
+          <Stack direction="row">
             <Select
               name="parent"
               placeholder="Select a portfolio"
@@ -209,7 +207,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
             />
             {defaultParentPortfolio && defaultParentPortfolio.id && (
               <Button
-                variant={'ghost'}
+                variant="ghost"
                 onClick={() =>
                   formRef.current?.setFieldValue(
                     'parent',

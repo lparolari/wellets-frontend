@@ -73,7 +73,7 @@ const Portfolio: React.FC = () => {
       setLoadingFetchPortfolios(true);
       const { parent_id } = params;
       const response = await api.get(
-        `/portfolios${parent_id ? '/' + parent_id : ''}`,
+        `/portfolios${parent_id ? `/${parent_id}` : ''}`,
       );
       setPortfolios(response.data);
     } catch (err) {
@@ -88,7 +88,7 @@ const Portfolio: React.FC = () => {
       try {
         setLoadingFetchPortfolio(true);
         const response = await api.get(
-          `/portfolios/details${id ? '/' + id : ''}`,
+          `/portfolios/details${id ? `/${id}` : ''}`,
         );
         setSelectedPortfolio(response.data);
       } catch (err) {
@@ -101,11 +101,11 @@ const Portfolio: React.FC = () => {
   );
 
   const fetchPortfolioBalance = useCallback(
-    async (id?: string, baseCurrency?: string) => {
+    async (id?: string, _baseCurrency?: string) => {
       try {
         setLoadingFetchPortfolioBalance(true);
         const response = await api.get(
-          `/portfolios/${id ? id + '/' : ''}balance`,
+          `/portfolios/${id ? `${id}/` : ''}balance`,
         );
         setPortfolioBalance(response.data.balance);
       } catch (err) {
@@ -228,7 +228,7 @@ const Portfolio: React.FC = () => {
                             history.push(
                               `/portfolios/${
                                 currentPortfolio.id
-                                  ? currentPortfolio.id + '/'
+                                  ? `${currentPortfolio.id}/`
                                   : ''
                               }rebalance`,
                             )
@@ -242,7 +242,7 @@ const Portfolio: React.FC = () => {
                             history.push(
                               `/portfolios${
                                 currentPortfolio.parent
-                                  ? '/' + currentPortfolio.parent.id
+                                  ? `/${currentPortfolio.parent.id}`
                                   : ''
                               }`,
                             )

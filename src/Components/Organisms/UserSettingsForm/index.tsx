@@ -36,21 +36,20 @@ const CreateWalletForm: React.FC<IProps> = ({ onSuccess }) => {
     undefined,
   );
   const [loadingFetchCurrencies, setLoadingFetchCurrencies] = useState(false);
-  const [loadingFetchUserSettings, setLoadingFetchUserSettings] = useState(
-    false,
-  );
-  const [loadingUpdateUserSettings, setLoadingUpdateUserSettings] = useState(
-    false,
-  );
+  const [loadingFetchUserSettings, setLoadingFetchUserSettings] =
+    useState(false);
+  const [loadingUpdateUserSettings, setLoadingUpdateUserSettings] =
+    useState(false);
 
   const currenciesOptions = useMemo(
     () =>
-      currencies.map(currency => {
-        return {
-          value: currency.id,
-          label: `${currency.acronym} - ${currency.alias}`,
-        } as IOption;
-      }),
+      currencies.map(
+        currency =>
+          ({
+            value: currency.id,
+            label: `${currency.acronym} - ${currency.alias}`,
+          } as IOption),
+      ),
     [currencies],
   );
 

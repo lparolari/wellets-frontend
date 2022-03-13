@@ -30,8 +30,8 @@ const Route: React.FC<RouteProps> = ({
   return (
     <ReactDOMRoute
       {...rest}
-      render={({ location }) => {
-        return isPrivate === !!user ? (
+      render={({ location }) =>
+        isPrivate === !!user ? (
           <Component />
         ) : (
           <Redirect
@@ -40,8 +40,8 @@ const Route: React.FC<RouteProps> = ({
               state: { from: location },
             }}
           />
-        );
-      }}
+        )
+      }
     />
   );
 };

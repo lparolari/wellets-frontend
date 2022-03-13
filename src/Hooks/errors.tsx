@@ -4,22 +4,24 @@ import React, {
   createContext,
   useContext,
   useCallback,
+  useMemo,
 } from 'react';
 import { FormHandles } from '@unform/core';
 import { ValidationError as YupValidationError } from 'yup';
 import { useToast } from '@chakra-ui/react';
 
+interface Errors {
+  [key: string]: string;
+}
+
 interface IErrorsContext {
   getValidationErrors(err: YupValidationError): Errors;
   handleErrors(
     title: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     err: any,
     formRef?: MutableRefObject<FormHandles | null>,
   ): void;
-}
-
-interface Errors {
-  [key: string]: string;
 }
 
 const ErrorsContext = createContext<IErrorsContext>({} as IErrorsContext);
@@ -41,6 +43,7 @@ export const ErrorsProvider: React.FC = ({ children }) => {
   const handleErrors = useCallback(
     (
       title: string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       err: any,
       formRef?: MutableRefObject<FormHandles | null>,
     ): void => {
@@ -79,10 +82,13 @@ export const ErrorsProvider: React.FC = ({ children }) => {
     [toast, getValidationErrors],
   );
 
+  const context = useMemo(
+    () => ({ getValidationErrors, handleErrors }),
+    [getValidationErrors, handleErrors],
+  );
+
   return (
-    <ErrorsContext.Provider value={{ getValidationErrors, handleErrors }}>
-      {children}
-    </ErrorsContext.Provider>
+    <ErrorsContext.Provider value={context}>{children}</ErrorsContext.Provider>
   );
 };
 

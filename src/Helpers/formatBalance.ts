@@ -9,8 +9,6 @@ const formatBalance = (
   balance: number,
   locales?: string | string[] | undefined,
   options: Intl.NumberFormatOptions = defaultOptions,
-): string => {
-  return balance.toLocaleString(locales, { ...defaultOptions, ...options });
-};
+): string => balance.toLocaleString(locales, { ...defaultOptions, ...options });
 
 export default formatBalance;

@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useMemo,
 } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -14,14 +15,14 @@ import localStorageConfig from 'Config/localStorage';
 
 import api from 'Services/api';
 
-const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
-
 interface IAuthContextData {
   user: IUser | null;
   signIn: (data: ISignInDTO) => Promise<void>;
   signOut: () => Promise<void>;
   handleSetUser: (data: IUser) => void;
 }
+
+const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const history = useHistory();
@@ -70,10 +71,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
   }, [signOut]);
 
+  const context = useMemo(
+    () => ({ user, signIn, signOut, handleSetUser }),
+    [handleSetUser, signIn, signOut, user],
+  );
+
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, handleSetUser }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
   );
 };
 

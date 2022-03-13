@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import formatBalance from 'Helpers/formatBalance';
 
@@ -18,7 +18,7 @@ const Balance: React.FC<IProps> = ({
   maximumFractionDigits = 2,
   ...rest
 }) => {
-  if (!balance && balance !== 0) return <></>;
+  if (!balance && balance !== 0) return null;
 
   const finalBalance = balance / dollar_rate;
 
@@ -35,7 +35,11 @@ const Balance: React.FC<IProps> = ({
       </>
     );
   } catch (e) {
-    return <>{`${currency} ${finalBalance.toFixed(maximumFractionDigits)}`}</>;
+    return (
+      <>
+        `${currency} ${finalBalance.toFixed(maximumFractionDigits)}`
+      </>
+    );
   }
 };
 

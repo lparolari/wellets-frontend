@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import CSS from 'csstype';
 import {
@@ -82,65 +83,61 @@ const Table: React.FC<IProps> = ({ columns, rows, pagination }) => {
     setData(sortedDataByOrder);
   }, [rows, sortBy, sortOrder]);
 
-  return (
-    <>
-      {(!pagination || (pagination && pagination.total > 0)) && (
-        <Box w="100%" maxW="100vw" overflowX={box?.overflowX}>
-          <BaseTable w="100%" maxW="100vw">
-            <Thead>
-              <Tr>
-                {columns.map(column => (
-                  <Th key={column.key}>
-                    <Stack direction="row">
-                      <Text
-                        onClick={() => {
-                          handleSortByClick(column.key, column.sort);
-                        }}
-                        cursor="pointer"
-                      >
-                        {column.title}
-                      </Text>
-                      <Box>
-                        {sortKey &&
-                          sortKey === column.key &&
-                          sortOrder &&
-                          ((sortOrder === 'asc' && <FiArrowUp />) || (
-                            <FiArrowDown />
-                          ))}
-                      </Box>
-                    </Stack>
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data.map((row, index) => (
-                <Tr key={index}>
-                  {columns.map(column => (
-                    <Td key={column.key}>
-                      {column.render
-                        ? column.render(row, index)
-                        : column.dataIndex
-                        ? row[column.dataIndex]
-                        : ''}
-                    </Td>
-                  ))}
-                </Tr>
+  return !pagination || (pagination && pagination.total > 0) ? (
+    <Box w="100%" maxW="100vw" overflowX={box?.overflowX}>
+      <BaseTable w="100%" maxW="100vw">
+        <Thead>
+          <Tr>
+            {columns.map(column => (
+              <Th key={column.key}>
+                <Stack direction="row">
+                  <Text
+                    onClick={() => {
+                      handleSortByClick(column.key, column.sort);
+                    }}
+                    cursor="pointer"
+                  >
+                    {column.title}
+                  </Text>
+                  <Box>
+                    {sortKey &&
+                      sortKey === column.key &&
+                      sortOrder &&
+                      ((sortOrder === 'asc' && <FiArrowUp />) || (
+                        <FiArrowDown />
+                      ))}
+                  </Box>
+                </Stack>
+              </Th>
+            ))}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map((row, index) => (
+            <Tr key={index}>
+              {columns.map(column => (
+                <Td key={column.key}>
+                  {column.render
+                    ? column.render(row, index)
+                    : column.dataIndex
+                    ? row[column.dataIndex]
+                    : ''}
+                </Td>
               ))}
-            </Tbody>
-            <Tfoot>
-              <Tr>
-                {columns.map(column => (
-                  <Th key={column.key}>{column.title}</Th>
-                ))}
-              </Tr>
-            </Tfoot>
-          </BaseTable>
-          {pagination && <Pagination {...pagination} />}
-        </Box>
-      )}
-    </>
-  );
+            </Tr>
+          ))}
+        </Tbody>
+        <Tfoot>
+          <Tr>
+            {columns.map(column => (
+              <Th key={column.key}>{column.title}</Th>
+            ))}
+          </Tr>
+        </Tfoot>
+      </BaseTable>
+      {pagination && <Pagination {...pagination} />}
+    </Box>
+  ) : null;
 };
 
 export default Table;

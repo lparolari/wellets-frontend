@@ -15,8 +15,8 @@ import IWallet from 'Entities/IWallet';
 import api from 'Services/api';
 import createTransaction from 'Schemas/createTransaction';
 import { getCurrencyName } from 'Helpers/getCurrency';
-import BaseRate from './BaseRate';
 import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
+import BaseRate from './BaseRate';
 
 interface ICreateTransaction {
   value: number;
@@ -35,8 +35,8 @@ interface IFormValues {
 interface IProps {
   wallet: IWallet;
   currencies: ICurrency[];
-  targetCurrency: any;
-  baseCurrency: any;
+  targetCurrency: ICurrency;
+  baseCurrency: ICurrency;
   onSuccess?: () => void;
 }
 
@@ -63,7 +63,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
         const dollar_rate = data.base_rate
           ? data.base_rate / baseCurrency.dollar_rate
           : undefined;
-        const description = data.description;
+        const { description } = data;
 
         await api.post('/transactions', {
           value,
@@ -87,7 +87,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
         handleErrors('Error when creating a new transaction', err);
       }
     },
-    [onSuccess, wallet, toast, handleErrors],
+    [wallet.id, baseCurrency.dollar_rate, toast, onSuccess, handleErrors],
   );
 
   return baseCurrency && targetCurrency ? (

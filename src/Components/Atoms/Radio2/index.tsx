@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React from 'react';
 import {
   Stack,
   RadioGroup,
@@ -6,8 +6,8 @@ import {
   StackDirection,
   RadioProps,
 } from '@chakra-ui/react';
-import InputError from '../InputError';
 import { useField } from 'formik';
+import InputError from '../InputError';
 
 interface IProps {
   name: string;
@@ -27,14 +27,13 @@ const Radio: React.FC<IRadioProps> = ({
   direction,
   ...rest
 }) => {
-  const [field, meta, helpers] = useField(name);
-  
-  const { onChange } = field;
+  const [_field, meta, helpers] = useField(name);
+
   const { value, error, touched } = meta;
   const { setValue } = helpers;
 
   return (
-    <RadioGroup onChange={(v) => setValue(v)} value={value} name={name}>
+    <RadioGroup onChange={v => setValue(v)} value={value} name={name}>
       <Stack direction={direction || 'row'}>
         {options.map(option => (
           <BaseRadio key={option.id} value={option.value} {...rest}>

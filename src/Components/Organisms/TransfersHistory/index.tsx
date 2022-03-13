@@ -84,12 +84,8 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
             title: 'Fee',
             key: 'fee',
             render(transfer: ITransfer) {
-              const {
-                static_fee,
-                percentual_fee,
-                value,
-                from_wallet,
-              } = transfer;
+              const { static_fee, percentual_fee, value, from_wallet } =
+                transfer;
               const fee =
                 Number(static_fee) +
                 (Number(percentual_fee) / 100) * Number(value);

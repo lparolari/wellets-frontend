@@ -35,7 +35,11 @@ import ICurrency from 'Entities/ICurrency';
 import api from 'Services/api';
 import { useErrors } from 'Hooks/errors';
 import Balance from 'Components/Molecules/Balance/Balance';
-import { getCurrency, getCurrencyDollarRate, getCurrencyName } from 'Helpers/getCurrency';
+import {
+  getCurrency,
+  getCurrencyDollarRate,
+  getCurrencyName,
+} from 'Helpers/getCurrency';
 import Space from 'Components/Atoms/Space/Space';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 
@@ -102,7 +106,7 @@ const Wallet: React.FC = () => {
   }, [handleErrors]);
 
   const fetchBalance = useCallback(
-    async (id: string) => {
+    async (_id: string) => {
       try {
         setLoadingFetchBalance(true);
 
@@ -239,16 +243,27 @@ const Wallet: React.FC = () => {
                       walletId={params.id}
                       updateTransactions={updateTransactions}
                     />
-                    <CreateTransactionForm
-                      wallet={wallet}
-                      currencies={currencies}
-                      targetCurrency={getCurrency(currencies, targetCurrencyId)}
-                      baseCurrency={getCurrency(currencies, baseCurrencyId)}
-                      onSuccess={() => {
-                        setUpdateTransactions(updateTransactions + 1);
-                        fetchWallet();
-                      }}
-                    />
+                    {/* TODO: perf */}
+                    {getCurrency(currencies, targetCurrencyId) &&
+                      getCurrency(currencies, baseCurrencyId) && (
+                        <CreateTransactionForm
+                          wallet={wallet}
+                          currencies={currencies}
+                          targetCurrency={
+                            getCurrency(
+                              currencies,
+                              targetCurrencyId,
+                            ) as ICurrency
+                          }
+                          baseCurrency={
+                            getCurrency(currencies, baseCurrencyId) as ICurrency
+                          }
+                          onSuccess={() => {
+                            setUpdateTransactions(updateTransactions + 1);
+                            fetchWallet();
+                          }}
+                        />
+                      )}
                   </Stack>
                 </TabPanel>
                 <TabPanel>

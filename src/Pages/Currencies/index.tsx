@@ -42,14 +42,11 @@ const Currencies: React.FC = () => {
   const [currencies, setCurrencies] = useState([] as ICurrency[]);
   const [loadingDeleteCurrency, setLoadingDeleteCurrency] = useState(false);
   const [loadingFetchCurrencies, setLoadingFetchCurrencies] = useState(false);
-  const [
-    loadingMarkAsFavoriteCurrency,
-    setLoadingMarkAsFavoriteCurrency,
-  ] = useState(-1);
+  const [loadingMarkAsFavoriteCurrency, setLoadingMarkAsFavoriteCurrency] =
+    useState(-1);
   const [currentCurrency, setCurrentCurrency] = useState({} as ICurrency);
-  const [loadingFetchAllCurrencies, setLoadingFetchAllCurrencies] = useState(
-    false,
-  );
+  const [loadingFetchAllCurrencies, setLoadingFetchAllCurrencies] =
+    useState(false);
   const [allCurrencies, setAllCurrencies] = useState([] as ICurrency[]);
 
   const fetchAllCurrencies = useCallback(
@@ -152,9 +149,8 @@ const Currencies: React.FC = () => {
                   render(currency: ICurrency) {
                     return `${Number(currency.dollar_rate).toFixed(8)}`;
                   },
-                  sort: (a: ICurrency, b: ICurrency) => {
-                    return a.dollar_rate - b.dollar_rate;
-                  },
+                  sort: (a: ICurrency, b: ICurrency) =>
+                    a.dollar_rate - b.dollar_rate,
                 },
                 {
                   title: 'Dollar Value',
@@ -164,9 +160,8 @@ const Currencies: React.FC = () => {
                       <Balance balance={1} dollar_rate={currency.dollar_rate} />
                     );
                   },
-                  sort: (a: ICurrency, b: ICurrency) => {
-                    return a.dollar_rate - b.dollar_rate;
-                  },
+                  sort: (a: ICurrency, b: ICurrency) =>
+                    a.dollar_rate - b.dollar_rate,
                 },
                 {
                   title: 'Format',
@@ -196,8 +191,7 @@ const Currencies: React.FC = () => {
                           isLoading={loadingDeleteCurrency}
                           onClick={() => handleDeleteCurrency(currency.id)}
                           confirmation={{
-                            body:
-                              'Are you sure you want to delete this currency? All data attached to it will be lost.',
+                            body: 'Are you sure you want to delete this currency? All data attached to it will be lost.',
                             buttonText: 'I am sure',
                             colorSchema: 'red',
                           }}
@@ -247,9 +241,8 @@ const Currencies: React.FC = () => {
                 render(currency: ICurrency) {
                   return `${Number(currency.dollar_rate).toFixed(8)}`;
                 },
-                sort: (a: ICurrency, b: ICurrency) => {
-                  return a.dollar_rate - b.dollar_rate;
-                },
+                sort: (a: ICurrency, b: ICurrency) =>
+                  a.dollar_rate - b.dollar_rate,
               },
               {
                 title: 'Dollar Value',
@@ -259,9 +252,8 @@ const Currencies: React.FC = () => {
                     <Balance balance={1} dollar_rate={currency.dollar_rate} />
                   );
                 },
-                sort: (a: ICurrency, b: ICurrency) => {
-                  return a.dollar_rate - b.dollar_rate;
-                },
+                sort: (a: ICurrency, b: ICurrency) =>
+                  a.dollar_rate - b.dollar_rate,
               },
               {
                 title: 'Format',

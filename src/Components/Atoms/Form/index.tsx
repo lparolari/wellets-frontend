@@ -9,16 +9,14 @@ interface IProps extends Omit<FormProps, 'ref'> {
 }
 
 const Form: React.FC<IProps> = React.forwardRef(
-  ({ title, children, ...rest }, ref) => {
-    return (
-      <BaseForm ref={ref} {...rest}>
-        <Stack spacing="40px">
-          {title && <Heading size="md">{title}</Heading>}
-          {children}
-        </Stack>
-      </BaseForm>
-    );
-  },
+  ({ title, children, ...rest }, ref) => (
+    <BaseForm ref={ref} {...rest}>
+      <Stack spacing="40px">
+        {title && <Heading size="md">{title}</Heading>}
+        {children}
+      </Stack>
+    </BaseForm>
+  ),
 );
 
 export default Form;

@@ -37,12 +37,13 @@ const CreateWalletForm: React.FC<IProps> = ({ onSuccess }) => {
 
   const currenciesOptions = useMemo(
     () =>
-      currencies.map(currency => {
-        return {
-          value: currency.id,
-          label: `${currency.acronym} - ${currency.alias}`,
-        } as IOption;
-      }),
+      currencies.map(
+        currency =>
+          ({
+            value: currency.id,
+            label: `${currency.acronym} - ${currency.alias}`,
+          } as IOption),
+      ),
     [currencies],
   );
 

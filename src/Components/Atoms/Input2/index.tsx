@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Input as BaseInput,
   FormControl,
@@ -10,8 +10,8 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-import InputError from '../InputError';
 import { useField } from 'formik';
+import InputError from '../InputError';
 
 interface IProps extends InputProps {
   name: string;

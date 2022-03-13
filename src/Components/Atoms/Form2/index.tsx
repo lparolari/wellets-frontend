@@ -1,4 +1,4 @@
-import React, { Ref } from 'react';
+import React from 'react';
 import { Stack, Heading } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
 

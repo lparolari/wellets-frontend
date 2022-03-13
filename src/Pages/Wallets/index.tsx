@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 import {
   useToast,
@@ -19,7 +19,6 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 import { FiRefreshCw } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
 
 import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form';

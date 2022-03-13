@@ -34,7 +34,7 @@
     "react-horizontal-scrolling-menu": "^0.7.10",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^5.0.0",
     "recharts": "^2.1.8",
     "styled-components": "^5.2.3",
     "yup": "^0.32.9"
@@ -45,7 +45,8 @@
     "dev": "react-scripts start NODE_ENV=development",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "eslint --ext .ts,.tsx src/**/*.{ts,tsx}",
+    "lint": "eslint --ext .ts,.tsx src",
+    "lint:fix": "eslint --ext .ts,.tsx src --fix",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -84,6 +85,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.3",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.5",
     "prettier": "^2.5.1",

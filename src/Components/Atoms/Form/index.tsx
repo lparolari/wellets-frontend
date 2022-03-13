@@ -1,7 +1,7 @@
-import React, { Ref } from 'react';
+import { Heading, Stack } from '@chakra-ui/react';
+import { FormHandles, FormProps } from '@unform/core';
 import { Form as BaseForm } from '@unform/web';
-import { FormProps, FormHandles } from '@unform/core';
-import { Stack, Heading } from '@chakra-ui/react';
+import React, { Ref } from 'react';
 
 interface IProps extends Omit<FormProps, 'ref'> {
   ref?: Ref<FormHandles>;

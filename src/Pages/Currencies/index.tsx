@@ -1,30 +1,26 @@
-import React, { useEffect, useState, useCallback } from 'react';
 import {
-  useToast,
   Flex,
-  Stack,
   Heading,
-  useBreakpointValue,
-  StackDirection,
-  Skeleton,
-  IconButton,
   Icon,
+  IconButton,
+  Skeleton,
+  Stack,
+  StackDirection,
+  useBreakpointValue,
+  useToast,
 } from '@chakra-ui/react';
-import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
-
 import Button from 'Components/Atoms/Button';
-import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
-import Table from 'Components/Molecules/Table';
-import UpsertCurrencyForm from 'Components/Organisms/UpsertCurrencyFrom';
-import Header from 'Components/Organisms/Header';
-
-import { useErrors } from 'Hooks/errors';
-
-import ICurrency from 'Entities/ICurrency';
-
-import api from 'Services/api';
+import PageContainer from 'Components/Atoms/PageContainer';
 import Balance from 'Components/Molecules/Balance/Balance';
+import Table from 'Components/Molecules/Table';
+import Header from 'Components/Organisms/Header';
+import UpsertCurrencyForm from 'Components/Organisms/UpsertCurrencyFrom';
+import ICurrency from 'Entities/ICurrency';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useEffect, useState } from 'react';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
+import api from 'Services/api';
 
 const Currencies: React.FC = () => {
   const { handleErrors } = useErrors();

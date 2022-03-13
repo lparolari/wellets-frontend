@@ -1,18 +1,15 @@
+import localStorageConfig from 'Config/localStorage';
+import ISignInDTO from 'DTOs/ISignInDTO';
+import IUser from 'Entities/IUser';
 import React, {
-  useContext,
   createContext,
-  useState,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import IUser from 'Entities/IUser';
-import ISignInDTO from 'DTOs/ISignInDTO';
-
-import localStorageConfig from 'Config/localStorage';
-
 import api from 'Services/api';
 
 interface IAuthContextData {

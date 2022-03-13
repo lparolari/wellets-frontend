@@ -1,28 +1,24 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  useMemo,
-} from 'react';
-import { FormHandles } from '@unform/core';
 import { Box, Skeleton, Stack, useToast } from '@chakra-ui/react';
-
+import { FormHandles } from '@unform/core';
+import Select from 'Components/Atoms/BetterSelect';
+import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form';
 import Input from 'Components/Atoms/Input';
-import Button from 'Components/Atoms/Button';
-
-import { useErrors } from 'Hooks/errors';
-
-import IPortfolio from 'Entities/IPortfolio';
-import IUpsertPortfolioDTO from 'DTOs/IUpsertPortfolioDTO';
-import IFormPortfolioDTO from 'DTOs/IFormPortfolioDTO';
-
-import api from 'Services/api';
-import upsertPortfolio from 'Schemas/upsertPortfolio';
-import IWallet from 'Entities/IWallet';
 import { IOption } from 'Components/Atoms/Select';
-import Select from 'Components/Atoms/BetterSelect';
+import IFormPortfolioDTO from 'DTOs/IFormPortfolioDTO';
+import IUpsertPortfolioDTO from 'DTOs/IUpsertPortfolioDTO';
+import IPortfolio from 'Entities/IPortfolio';
+import IWallet from 'Entities/IWallet';
+import { useErrors } from 'Hooks/errors';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import upsertPortfolio from 'Schemas/upsertPortfolio';
+import api from 'Services/api';
 
 interface IProps {
   currentPortfolio: IPortfolio;

@@ -1,5 +1,3 @@
-import React, { useMemo } from 'react';
-
 import {
   Box,
   Button as BaseButton,
@@ -12,6 +10,7 @@ import {
   PopoverTrigger,
   Portal,
 } from '@chakra-ui/react';
+import React, { useMemo } from 'react';
 
 interface IProps extends ButtonProps {
   isPrimary?: boolean;

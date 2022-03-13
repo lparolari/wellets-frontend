@@ -1,17 +1,15 @@
-import React from 'react';
-import { Switch, Redirect } from 'react-router-dom';
-
 import Route from 'Components/Atoms/Route';
-
-import Sign from 'Pages/Sign';
-import Menu from 'Pages/Menu';
-import Wallets from 'Pages/Wallets';
-import Wallet from 'Pages/Wallet';
 import Currencies from 'Pages/Currencies';
-import Settings from 'Pages/Settings';
+import Menu from 'Pages/Menu';
 import Portfolio from 'Pages/Portfolio';
 import Rebalance from 'Pages/Rebalance';
+import Settings from 'Pages/Settings';
+import Sign from 'Pages/Sign';
+import Wallet from 'Pages/Wallet';
 import WalletDetails from 'Pages/WalletDetails';
+import Wallets from 'Pages/Wallets';
+import React from 'react';
+import { Redirect, Switch } from 'react-router-dom';
 
 const Routes: React.FC = () => (
   <Switch>

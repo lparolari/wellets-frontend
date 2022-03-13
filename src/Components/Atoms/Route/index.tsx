@@ -1,13 +1,11 @@
+import localStorageConfig from 'Config/localStorage';
+import { useAuth } from 'Hooks/auth';
 import React, { useMemo } from 'react';
 import {
-  RouteProps as ReactDOMRouteProps,
-  Route as ReactDOMRoute,
   Redirect,
+  Route as ReactDOMRoute,
+  RouteProps as ReactDOMRouteProps,
 } from 'react-router-dom';
-
-import { useAuth } from 'Hooks/auth';
-
-import localStorageConfig from 'Config/localStorage';
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;

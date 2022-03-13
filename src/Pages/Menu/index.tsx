@@ -1,14 +1,12 @@
-import React from 'react';
 import { Grid, useBreakpointValue } from '@chakra-ui/react';
-
-import Wallet from 'Assets/Icons/Wallet';
-import Unknown from 'Assets/Icons/Unknown';
 import Bitcoin from 'Assets/Icons/Bitcoin';
-
-import PageContainer from 'Components/Atoms/PageContainer';
+import Unknown from 'Assets/Icons/Unknown';
+import Wallet from 'Assets/Icons/Wallet';
 import ContentContainer from 'Components/Atoms/ContentContainer';
+import PageContainer from 'Components/Atoms/PageContainer';
 import MenuItem from 'Components/Molecules/MenuItem';
 import Header from 'Components/Organisms/Header';
+import React from 'react';
 
 const Menu: React.FC = () => {
   const gridTemplate = useBreakpointValue({

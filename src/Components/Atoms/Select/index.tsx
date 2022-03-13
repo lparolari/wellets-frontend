@@ -1,14 +1,14 @@
-import React, { useRef, useEffect } from 'react';
-import { useField } from '@unform/core';
 import {
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  InputGroup,
+  InputRightElement,
   Select as BaseSelect,
   SelectProps,
-  FormControl,
-  InputGroup,
-  FormLabel,
-  InputRightElement,
-  FormHelperText,
 } from '@chakra-ui/react';
+import { useField } from '@unform/core';
+import React, { useEffect, useRef } from 'react';
 
 import InputError from '../InputError';
 

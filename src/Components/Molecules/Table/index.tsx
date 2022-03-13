@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
-import CSS from 'csstype';
 import {
   Box,
+  ResponsiveValue,
+  Stack,
   Table as BaseTable,
   Tbody,
   Td,
+  Text,
   Tfoot,
   Th,
   Thead,
   Tr,
   useBreakpointValue,
-  ResponsiveValue,
-  Stack,
-  Text,
 } from '@chakra-ui/react';
-import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import CSS from 'csstype';
+import React, { useEffect, useState } from 'react';
+import { FiArrowDown, FiArrowUp } from 'react-icons/fi';
 
 import Pagination, { IPaginationProps } from '../Pagination';
 

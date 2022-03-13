@@ -1,25 +1,21 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from 'react';
-import { FormHandles } from '@unform/core';
 import { Box, Skeleton, useToast } from '@chakra-ui/react';
-
+import { FormHandles } from '@unform/core';
+import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form';
 import Select, { IOption } from 'Components/Atoms/Select';
-import Button from 'Components/Atoms/Button';
-
-import { useErrors } from 'Hooks/errors';
-
+import IUserSettingsDTO from 'DTOs/IUserSettings';
 import ICurrency from 'Entities/ICurrency';
 import IUserSettings from 'Entities/IUserSettings';
-import IUserSettingsDTO from 'DTOs/IUserSettings';
-
-import api from 'Services/api';
+import { useErrors } from 'Hooks/errors';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import createUserSettings from 'Schemas/createUserSettings';
+import api from 'Services/api';
 
 interface IProps {
   onSuccess?: () => void;

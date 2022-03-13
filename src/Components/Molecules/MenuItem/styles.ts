@@ -1,6 +1,5 @@
-import styled, { css } from 'styled-components';
-
 import { Box } from '@chakra-ui/react';
+import styled, { css } from 'styled-components';
 
 interface IProps {
   borderColor: string;

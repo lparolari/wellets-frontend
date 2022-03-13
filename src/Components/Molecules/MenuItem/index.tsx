@@ -1,16 +1,15 @@
-import React from 'react';
 import {
   Center,
   Heading,
-  List,
-  ListItem,
-  ListIcon,
   LinkBox,
   LinkOverlay,
+  List,
+  ListIcon,
+  ListItem,
 } from '@chakra-ui/react';
-import { FiCheckCircle } from 'react-icons/fi';
-
 import IIconProps from 'Assets/Icons/IIconProps';
+import React from 'react';
+import { FiCheckCircle } from 'react-icons/fi';
 
 import { Container } from './styles';
 

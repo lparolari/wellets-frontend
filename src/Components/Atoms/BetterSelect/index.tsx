@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useRef, useEffect, useState } from 'react';
-import { useField } from '@unform/core';
 import {
-  SelectProps,
   FormControl,
-  InputGroup,
-  FormLabel,
-  InputRightElement,
   FormHelperText,
+  FormLabel,
+  InputGroup,
+  InputRightElement,
+  SelectProps,
 } from '@chakra-ui/react';
+import { useField } from '@unform/core';
 import { Select as BaseSelect } from 'chakra-react-select';
+import React, { useEffect, useRef, useState } from 'react';
 
 import InputError from '../InputError';
 

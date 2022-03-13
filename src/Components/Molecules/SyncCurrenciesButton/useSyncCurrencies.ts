@@ -1,7 +1,6 @@
 import { useToast } from '@chakra-ui/react';
 import { useErrors } from 'Hooks/errors';
 import { useCallback, useState } from 'react';
-
 import api from 'Services/api';
 
 export const useSyncCurrencies = () => {

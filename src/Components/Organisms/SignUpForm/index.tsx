@@ -1,14 +1,10 @@
-import React, { useRef, useState, useCallback } from 'react';
-import { FormHandles } from '@unform/core';
 import { Button, useToast } from '@chakra-ui/react';
-
+import { FormHandles } from '@unform/core';
 import Form from 'Components/Atoms/Form';
 import Input from 'Components/Atoms/Input';
-
-import { useErrors } from 'Hooks/errors';
-
 import ISignUpDTO from 'DTOs/ISignUpDTO';
-
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useRef, useState } from 'react';
 import signUpSchema from 'Schemas/signUp';
 import api from 'Services/api';
 

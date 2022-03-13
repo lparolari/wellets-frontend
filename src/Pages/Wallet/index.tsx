@@ -1,47 +1,46 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
-  Stack,
-  Heading,
-  useBreakpointValue,
-  StackDirection,
-  Skeleton,
-  Flex,
-  IconButton,
   Box,
+  Flex,
+  Heading,
+  IconButton,
   SimpleGrid,
+  Skeleton,
+  Stack,
+  StackDirection,
   Stat,
   StatLabel,
   StatNumber,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useBreakpointValue,
 } from '@chakra-ui/react';
-import { FiRefreshCw } from 'react-icons/fi';
-
-import PageContainer from 'Components/Atoms/PageContainer';
 import ContentContainer from 'Components/Atoms/ContentContainer';
-import Header from 'Components/Organisms/Header';
-import CreateTransactionForm from 'Components/Organisms/CreateTransactionForm';
 import Form from 'Components/Atoms/Form';
+import PageContainer from 'Components/Atoms/PageContainer';
 import Select, { IOption } from 'Components/Atoms/Select';
+import Space from 'Components/Atoms/Space/Space';
+import Balance from 'Components/Molecules/Balance/Balance';
+import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
+import CreateTransactionForm from 'Components/Organisms/CreateTransactionForm';
 import CreateTransferForm from 'Components/Organisms/CreateTransferForm';
+import Header from 'Components/Organisms/Header';
 import TransactionsHistory from 'Components/Organisms/TransactionsHistory';
 import TransfersHistory from 'Components/Organisms/TransfersHistory';
-import IWallet from 'Entities/IWallet';
 import ICurrency from 'Entities/ICurrency';
-import api from 'Services/api';
-import { useErrors } from 'Hooks/errors';
-import Balance from 'Components/Molecules/Balance/Balance';
+import IWallet from 'Entities/IWallet';
 import {
   getCurrency,
   getCurrencyDollarRate,
   getCurrencyName,
 } from 'Helpers/getCurrency';
-import Space from 'Components/Atoms/Space/Space';
-import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FiRefreshCw } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
+import api from 'Services/api';
 
 interface IParams {
   id: string;

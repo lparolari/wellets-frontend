@@ -1,25 +1,21 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from 'react';
-import { FormHandles } from '@unform/core';
 import { Box, Skeleton, useToast } from '@chakra-ui/react';
-
+import { FormHandles } from '@unform/core';
+import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form';
 import Input from 'Components/Atoms/Input';
 import Select, { IOption } from 'Components/Atoms/Select';
-import Button from 'Components/Atoms/Button';
-
-import { useErrors } from 'Hooks/errors';
-
-import ICurrency from 'Entities/ICurrency';
 import ICreateWalletDTO from 'DTOs/ICreateWalletDTO';
-
-import api from 'Services/api';
+import ICurrency from 'Entities/ICurrency';
+import { useErrors } from 'Hooks/errors';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import createWallet from 'Schemas/createWallet';
+import api from 'Services/api';
 
 interface IProps {
   onSuccess?: () => void;

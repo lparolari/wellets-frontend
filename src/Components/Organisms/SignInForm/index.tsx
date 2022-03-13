@@ -1,15 +1,11 @@
-import React, { useRef, useState, useCallback } from 'react';
 import { FormHandles } from '@unform/core';
-
+import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form';
 import Input from 'Components/Atoms/Input';
-import Button from 'Components/Atoms/Button';
-
 import ISignInDTO from 'DTOs/ISignInDTO';
-
 import { useAuth } from 'Hooks/auth';
 import { useErrors } from 'Hooks/errors';
-
+import React, { useCallback, useRef, useState } from 'react';
 import signInSchema from 'Schemas/signIn';
 
 const SignInForm: React.FC = () => {

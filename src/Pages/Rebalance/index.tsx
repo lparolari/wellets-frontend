@@ -1,38 +1,33 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import {
-  Stack,
-  Heading,
-  useBreakpointValue,
-  StackDirection,
-  Skeleton,
   Box,
+  Heading,
   Link,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Menu,
-  MenuGroup,
+  MenuButton,
   MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Skeleton,
+  Stack,
+  StackDirection,
+  useBreakpointValue,
 } from '@chakra-ui/react';
-import { PieChart, Pie, LabelList, Tooltip } from 'recharts';
-
-import { useErrors } from 'Hooks/errors';
-
-import api from 'Services/api';
-
-import formatPercentage from 'Helpers/formatPercentage';
-
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import PageContainer from 'Components/Atoms/PageContainer';
 import Space from 'Components/Atoms/Space/Space';
 import Balance from 'Components/Molecules/Balance/Balance';
 import Table from 'Components/Molecules/Table';
 import Header from 'Components/Organisms/Header';
-
+import IAllocation, { IChange } from 'Entities/IAllocation';
 import IPortfolio from 'Entities/IPortfolio';
 import formataBalance from 'Helpers/formatBalance';
-import IAllocation, { IChange } from 'Entities/IAllocation';
+import formatPercentage from 'Helpers/formatPercentage';
+import { useErrors } from 'Hooks/errors';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { LabelList, Pie, PieChart, Tooltip } from 'recharts';
+import api from 'Services/api';
 
 interface IParams {
   id: string;

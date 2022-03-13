@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
-  Stack,
-  RadioGroup,
   Radio as BaseRadio,
-  StackDirection,
+  RadioGroup,
   RadioProps,
+  Stack,
+  StackDirection,
 } from '@chakra-ui/react';
 import { useField } from '@unform/core';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import InputError from '../InputError';
 
 interface IProps {

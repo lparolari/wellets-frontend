@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
 import { Container, Flex } from '@chakra-ui/react';
-
 import Button from 'Components/Atoms/Button';
+import React, { useMemo } from 'react';
 
 export interface IPaginationProps {
   currentPage: number;

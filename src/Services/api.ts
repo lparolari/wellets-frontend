@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import localStorageConfig from 'Config/localStorage';
 
 const getAuthToken = (): string | null => {

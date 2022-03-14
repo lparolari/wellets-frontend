@@ -58,7 +58,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
         const value = data.type === 'outcoming' ? data.value * -1 : data.value;
         const wallet_id = wallet.id;
         const dollar_rate = data.base_rate
-          ? data.base_rate / baseCurrency.dollar_rate
+          ? 1 / (data.base_rate / baseCurrency.dollar_rate)
           : undefined;
         const { description } = data;
 

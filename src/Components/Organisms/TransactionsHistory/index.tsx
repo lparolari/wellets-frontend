@@ -4,9 +4,9 @@ import Table from 'Components/Molecules/Table';
 import ITransaction from 'Entities/ITransaction';
 import compareDate from 'Helpers/compareDate';
 import formatDate from 'Helpers/formatDate';
-import { useErrors } from 'Hooks/errors';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import api from 'Services/api';
+import useBaseCurrencyData from 'Hooks/useBaseCurrencyData';
+import useTransactionData from 'Hooks/useTransactionData';
+import React, { useEffect, useState } from 'react';
 
 interface IProps {
   walletId: string;
@@ -17,41 +17,18 @@ const TransactionHistory: React.FC<IProps> = ({
   walletId,
   updateTransactions,
 }) => {
-  const { handleErrors } = useErrors();
-
-  const limit = useMemo(() => 5, []);
-
-  const [transactions, setTransactions] = useState([] as ITransaction[]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
 
-  const fetchTransactions = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await api.get('/transactions', {
-        params: {
-          limit,
-          page,
-          wallet_id: walletId,
-        },
-      });
-      setTransactions(response.data.transactions);
-      setTotal(response.data.total);
-    } catch (err) {
-      handleErrors('Error when fetching transactions', err);
-    } finally {
-      setLoading(false);
-    }
-    // eslint-disable-next-line
-  }, [limit, page, walletId, updateTransactions, handleErrors]);
+  const { baseCurrency } = useBaseCurrencyData();
+  const { fetchTransactions, transactions, limit, total, isLoading } =
+    useTransactionData(walletId);
 
   useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
+    fetchTransactions(page);
+  }, [fetchTransactions, updateTransactions, page]);
 
-  return (
-    <Skeleton isLoaded={!loading}>
+  return baseCurrency ? (
+    <Skeleton isLoaded={!isLoading}>
       <Table
         rows={transactions}
         columns={[
@@ -83,6 +60,20 @@ const TransactionHistory: React.FC<IProps> = ({
               return a.value - b.value;
             },
           },
+          {
+            title: 'Equivalent',
+            key: 'equivalent',
+            render(transaction: ITransaction) {
+              const { value, dollar_rate } = transaction;
+              return (
+                <Balance
+                  balance={value}
+                  dollar_rate={dollar_rate / baseCurrency.dollar_rate}
+                  currency={baseCurrency.acronym}
+                />
+              );
+            },
+          },
         ]}
         pagination={{
           limit,
@@ -92,7 +83,7 @@ const TransactionHistory: React.FC<IProps> = ({
         }}
       />
     </Skeleton>
-  );
+  ) : null;
 };
 
 export default TransactionHistory;

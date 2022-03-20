@@ -1,8 +1,10 @@
-import { Box, useToast } from '@chakra-ui/react';
+import { Box, InputRightElement, Stack, useToast } from '@chakra-ui/react';
 import Button from 'Components/Atoms/Button';
 import Form from 'Components/Atoms/Form2';
 import Input from 'Components/Atoms/Input2';
 import Radio from 'Components/Atoms/Radio2';
+import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
+import ChangeRateField from 'Components/Molecules/ChangeRateField';
 import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
 import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
@@ -13,19 +15,17 @@ import React, { useCallback, useMemo } from 'react';
 import createTransaction from 'Schemas/createTransaction';
 import api from 'Services/api';
 
-import BaseRate from './BaseRate';
-
 interface ICreateTransaction {
   value: number;
   description: string;
   type: 'incoming' | 'outcoming';
-  base_rate?: number;
+  change_rate?: number;
 }
 
 interface IFormValues {
   value: string;
   description: string;
-  base_rate: string;
+  change_rate: string;
   type: string;
 }
 
@@ -57,9 +57,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
       try {
         const value = data.type === 'outcoming' ? data.value * -1 : data.value;
         const wallet_id = wallet.id;
-        const dollar_rate = data.base_rate
-          ? data.base_rate / baseCurrency.dollar_rate
-          : undefined;
+        const dollar_rate = data.change_rate;
         const { description } = data;
 
         await api.post('/transactions', {
@@ -84,13 +82,18 @@ const CreateTransactionForm: React.FC<IProps> = ({
         handleErrors('Error when creating a new transaction', err);
       }
     },
-    [wallet.id, baseCurrency.dollar_rate, toast, onSuccess, handleErrors],
+    [wallet.id, toast, onSuccess, handleErrors],
   );
 
   return baseCurrency && targetCurrency ? (
     <Box w="100%">
       <Formik<IFormValues>
-        initialValues={{ value: '', description: '', base_rate: '', type: '' }}
+        initialValues={{
+          value: '',
+          description: '',
+          change_rate: '',
+          type: '',
+        }}
         validationSchema={createTransaction}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           if (
@@ -102,17 +105,48 @@ const CreateTransactionForm: React.FC<IProps> = ({
               value: Number(values.value),
               description: values.description,
               type: values.type as 'incoming' | 'outcoming',
-              base_rate: Number(values.base_rate),
+              change_rate: Number(values.change_rate),
             })
               .then(() => resetForm())
               .finally(() => setSubmitting(false));
           }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form>
-            <Input name="value" type="number" placeholder={valuePlaceholder} />
+            <Stack direction="row">
+              <Input
+                name="value"
+                type="number"
+                placeholder={valuePlaceholder}
+                rightElement={
+                  values.value && (
+                    <InputRightElement width="6.5rem">
+                      <BalanceBadge
+                        balance={Number(values.value)}
+                        currency={baseCurrency.acronym}
+                        dollar_rate={
+                          values.change_rate
+                            ? Number(values.change_rate) /
+                              baseCurrency.dollar_rate
+                            : targetCurrency.dollar_rate /
+                              baseCurrency.dollar_rate
+                        }
+                      />
+                    </InputRightElement>
+                  )
+                }
+              />
+
+              <ChangeRateField
+                name="change_rate"
+                targetCurrency={targetCurrency}
+                baseCurrency={baseCurrency}
+              />
+            </Stack>
+
             <Input name="description" type="text" placeholder="Description" />
+
             <Radio
               name="type"
               options={[
@@ -120,11 +154,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
                 { id: 'outcoming', value: 'outcoming', label: 'Outcoming' },
               ]}
             />
-            <BaseRate
-              name="base_rate"
-              targetCurrency={targetCurrency}
-              baseCurrency={baseCurrency}
-            />
+
             <Button
               type="submit"
               isPrimary

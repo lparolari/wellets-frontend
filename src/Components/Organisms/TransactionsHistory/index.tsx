@@ -1,5 +1,6 @@
 import { Skeleton } from '@chakra-ui/react';
 import Balance from 'Components/Molecules/Balance/Balance';
+import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import Table from 'Components/Molecules/Table';
 import ITransaction from 'Entities/ITransaction';
 import compareDate from 'Helpers/compareDate';
@@ -53,7 +54,16 @@ const TransactionHistory: React.FC<IProps> = ({
             render(transaction: ITransaction) {
               const { value, wallet } = transaction;
               return (
-                <Balance balance={value} currency={wallet.currency.acronym} />
+                <>
+                  <Balance balance={value} currency={wallet.currency.acronym} />
+                  <BalanceBadge
+                    balance={value}
+                    dollar_rate={
+                      baseCurrency.dollar_rate * wallet.currency.dollar_rate
+                    }
+                    currency={baseCurrency.acronym}
+                  />
+                </>
               );
             },
             sort(a: ITransaction, b: ITransaction) {
@@ -61,13 +71,13 @@ const TransactionHistory: React.FC<IProps> = ({
             },
           },
           {
-            title: 'Equivalent',
-            key: 'equivalent',
+            title: 'Change rate',
+            key: 'change_rate',
             render(transaction: ITransaction) {
-              const { value, dollar_rate } = transaction;
+              const { dollar_rate } = transaction;
               return (
                 <Balance
-                  balance={value}
+                  balance={1}
                   dollar_rate={dollar_rate / baseCurrency.dollar_rate}
                   currency={baseCurrency.acronym}
                 />

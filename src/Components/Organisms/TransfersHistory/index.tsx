@@ -1,10 +1,12 @@
 import { Skeleton } from '@chakra-ui/react';
 import Balance from 'Components/Molecules/Balance/Balance';
+import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import Table from 'Components/Molecules/Table';
 import ITransfer from 'Entities/ITransfer';
 import compareDate from 'Helpers/compareDate';
 import formatDate from 'Helpers/formatDate';
 import { useErrors } from 'Hooks/errors';
+import useBaseCurrencyData from 'Hooks/useBaseCurrencyData';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import api from 'Services/api';
 
@@ -17,6 +19,8 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
   const { handleErrors } = useErrors();
 
   const limit = useMemo(() => 5, []);
+
+  const { baseCurrency } = useBaseCurrencyData();
 
   const [transfers, setTransfers] = useState([] as ITransfer[]);
   const [total, setTotal] = useState(0);
@@ -47,7 +51,7 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
     fetchTransfers();
   }, [fetchTransfers]);
 
-  return (
+  return baseCurrency ? (
     <Skeleton isLoaded={!loading}>
       <Table
         rows={transfers}
@@ -68,10 +72,20 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
             render(transfer: ITransfer) {
               const { value, from_wallet } = transfer;
               return (
-                <Balance
-                  balance={value}
-                  currency={from_wallet.currency.acronym}
-                />
+                <>
+                  <Balance
+                    balance={value}
+                    currency={from_wallet.currency.acronym}
+                  />
+                  <BalanceBadge
+                    balance={value}
+                    dollar_rate={
+                      from_wallet.currency.dollar_rate /
+                      baseCurrency.dollar_rate
+                    }
+                    currency={baseCurrency.acronym}
+                  />
+                </>
               );
             },
             sort(a: ITransfer, b: ITransfer) {
@@ -88,10 +102,20 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
                 Number(static_fee) +
                 (Number(percentual_fee) / 100) * Number(value);
               return (
-                <Balance
-                  balance={fee}
-                  currency={from_wallet.currency.acronym}
-                />
+                <>
+                  <Balance
+                    balance={fee}
+                    currency={from_wallet.currency.acronym}
+                  />
+                  <BalanceBadge
+                    balance={fee}
+                    dollar_rate={
+                      from_wallet.currency.dollar_rate /
+                      baseCurrency.dollar_rate
+                    }
+                    currency={baseCurrency.acronym}
+                  />
+                </>
               );
             },
             sort(a: ITransfer, b: ITransfer) {
@@ -109,10 +133,24 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
             title: 'Filled',
             key: 'filled',
             render(transfer: ITransfer) {
-              const currency = transfer.to_wallet.currency.acronym;
+              const { currency } = transfer.to_wallet;
               const { filled } = transfer;
 
-              return <Balance balance={Number(filled)} currency={currency} />;
+              return (
+                <>
+                  <Balance
+                    balance={Number(filled)}
+                    currency={currency.acronym}
+                  />
+                  <BalanceBadge
+                    balance={filled}
+                    dollar_rate={
+                      currency.dollar_rate / baseCurrency.dollar_rate
+                    }
+                    currency={baseCurrency.acronym}
+                  />
+                </>
+              );
             },
             sort: (a: ITransfer, b: ITransfer) => {
               const a_dollar_rate = a.to_wallet.currency.dollar_rate;
@@ -154,7 +192,7 @@ const TransfersHistory: React.FC<IProps> = ({ walletId, updateTransfers }) => {
         }}
       />
     </Skeleton>
-  );
+  ) : null;
 };
 
 export default TransfersHistory;

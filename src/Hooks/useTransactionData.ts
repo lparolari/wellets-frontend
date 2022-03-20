@@ -10,7 +10,7 @@ const useTransactionData = (walletId: string) => {
   const [isLoading, setLoading] = useState(false);
 
   const [limit, setLimit] = useState(5);
-  const [total, setTotal] = useState(5);
+  const [total, setTotal] = useState(0);
   const [transactions, setTransactions] = useState([] as ITransaction[]);
 
   const fetchTransactions = useCallback(
@@ -35,8 +35,25 @@ const useTransactionData = (walletId: string) => {
     [handleErrors, limit, walletId],
   );
 
+  const revertTransaction = async (transaction: ITransaction) => {
+    try {
+      setLoading(true);
+      api.post<ITransaction>(`/transactions/${transaction.id}/revert`, {
+        value: transaction.value * -1,
+        wallet_id: transaction.wallet_id,
+        dollar_rate: transaction.dollar_rate,
+        description: `Reverted ${transaction.description}`,
+      });
+    } catch (err) {
+      handleErrors('Error reverting transaction', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     fetchTransactions,
+    revertTransaction,
     transactions,
     limit,
     total,

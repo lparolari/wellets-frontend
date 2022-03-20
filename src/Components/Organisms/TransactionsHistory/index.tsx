@@ -1,4 +1,5 @@
 import { Skeleton } from '@chakra-ui/react';
+import Button from 'Components/Atoms/Button';
 import Balance from 'Components/Molecules/Balance/Balance';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import Table from 'Components/Molecules/Table';
@@ -21,8 +22,14 @@ const TransactionHistory: React.FC<IProps> = ({
   const [page, setPage] = useState(1);
 
   const { baseCurrency } = useBaseCurrencyData();
-  const { fetchTransactions, transactions, limit, total, isLoading } =
-    useTransactionData(walletId);
+  const {
+    fetchTransactions,
+    revertTransaction,
+    transactions,
+    limit,
+    total,
+    isLoading,
+  } = useTransactionData(walletId);
 
   useEffect(() => {
     fetchTransactions(page);
@@ -82,6 +89,25 @@ const TransactionHistory: React.FC<IProps> = ({
                   currency={baseCurrency.acronym}
                 />
               );
+            },
+          },
+          {
+            title: 'Action',
+            key: 'action',
+            render(transaction: ITransaction) {
+              const canRevert = !transaction.description.startsWith('Sent to');
+
+              return canRevert ? (
+                <Button
+                  onClick={() => {
+                    revertTransaction(transaction).then(() =>
+                      fetchTransactions(page),
+                    );
+                  }}
+                >
+                  Revert
+                </Button>
+              ) : null;
             },
           },
         ]}

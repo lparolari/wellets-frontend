@@ -26,7 +26,8 @@ export interface IProps extends SelectProps {
   isMulti?: boolean;
 }
 
-const BetterSelect: React.FC<IProps> = ({
+// TODO: replace the following component with advanced select
+const BetterSelect: React.FC<any> = ({
   name,
   label,
   helper,
@@ -62,7 +63,7 @@ const BetterSelect: React.FC<IProps> = ({
       {label && <FormLabel>{label}</FormLabel>}
       <InputGroup>
         <div style={{ width: '100%' }}>
-          <BaseSelect
+          <BaseSelect<IOption>
             options={options}
             ref={selectRef}
             defaultValue={defaultValue}

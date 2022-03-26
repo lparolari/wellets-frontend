@@ -44,19 +44,20 @@ const BetterSelect: React.FC<any> = ({
     registerField({
       name: fieldName,
       ref: selectRef.current,
-      getValue(ref) {
-        return ref.state.value;
+      getValue: (ref: any) => {
+        if (isMulti) return ref.state.selectValue;
+        return ref.state.selectValue[0];
       },
       clearValue(ref) {
-        ref.state.value = null;
+        ref.state.selectValue = isMulti ? [] : null;
         setValue(undefined);
       },
       setValue(ref, newValue: any) {
-        ref.state.value = newValue;
+        ref.state.selectValue = newValue;
         setValue(newValue);
       },
     });
-  }, [fieldName, registerField]);
+  }, [fieldName, registerField, isMulti]);
 
   return (
     <FormControl id={name}>

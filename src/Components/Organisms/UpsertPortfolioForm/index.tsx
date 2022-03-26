@@ -155,7 +155,7 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
         weight: currentPortfolio.weight * 100,
         parent: currentPortfolio.parent
           ? portfolioToOption(currentPortfolio.parent)
-          : undefined,
+          : null,
         wallets: currentPortfolio.wallets.map(wallet => ({
           value: wallet.id,
           label: wallet.alias,

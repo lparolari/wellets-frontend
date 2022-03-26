@@ -1,11 +1,12 @@
 import { Box, InputRightElement, Stack, useToast } from '@chakra-ui/react';
 import Button from 'Components/Atoms/Button';
+import DateTimeInput from 'Components/Atoms/DateTimeInput';
 import Form from 'Components/Atoms/Form2';
 import Input from 'Components/Atoms/Input2';
 import Radio from 'Components/Atoms/Radio2';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import ChangeRateField from 'Components/Molecules/ChangeRateField';
-import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
+import IUpsertTransactionDTO from 'DTOs/IUpsertTransactionDTO';
 import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
 import { Formik } from 'formik';
@@ -20,6 +21,7 @@ interface ICreateTransaction {
   description: string;
   type: 'incoming' | 'outcoming';
   change_rate?: number;
+  created_at?: Date;
 }
 
 interface IFormValues {
@@ -27,6 +29,7 @@ interface IFormValues {
   description: string;
   change_rate: string;
   type: string;
+  created_at: string;
 }
 
 interface IProps {
@@ -58,14 +61,15 @@ const CreateTransactionForm: React.FC<IProps> = ({
         const value = data.type === 'outcoming' ? data.value * -1 : data.value;
         const wallet_id = wallet.id;
         const dollar_rate = data.change_rate;
-        const { description } = data;
+        const { description, created_at } = data;
 
         await api.post('/transactions', {
           value,
           wallet_id,
           dollar_rate,
           description,
-        } as ICreateTransactionDTO);
+          created_at,
+        } as IUpsertTransactionDTO);
 
         toast({
           title: 'A new transaction has been successfully created!',
@@ -93,7 +97,9 @@ const CreateTransactionForm: React.FC<IProps> = ({
           description: '',
           change_rate: '',
           type: '',
+          created_at: '',
         }}
+        enableReinitialize
         validationSchema={createTransaction}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           if (
@@ -105,7 +111,12 @@ const CreateTransactionForm: React.FC<IProps> = ({
               value: Number(values.value),
               description: values.description,
               type: values.type as 'incoming' | 'outcoming',
-              change_rate: Number(values.change_rate),
+              change_rate: values.change_rate
+                ? Number(values.change_rate)
+                : undefined,
+              created_at: values.created_at
+                ? new Date(values.created_at)
+                : undefined,
             })
               .then(() => resetForm())
               .finally(() => setSubmitting(false));
@@ -155,14 +166,22 @@ const CreateTransactionForm: React.FC<IProps> = ({
               ]}
             />
 
-            <Button
-              type="submit"
-              isPrimary
-              isLoading={isSubmitting}
-              isDisabled={isSubmitting}
-            >
-              Create
-            </Button>
+            <DateTimeInput
+              name="created_at"
+              helper="The date and time of the transaction"
+            />
+
+            <Stack spacing="10px">
+              <Button
+                type="submit"
+                isPrimary
+                isLoading={isSubmitting}
+                isDisabled={isSubmitting}
+                colorSchema="green"
+              >
+                Create
+              </Button>
+            </Stack>
           </Form>
         )}
       </Formik>

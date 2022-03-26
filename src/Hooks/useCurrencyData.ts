@@ -1,5 +1,5 @@
 import ICurrency from 'Entities/ICurrency';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import api from 'Services/api';
 
 import { useErrors } from './errors';
@@ -15,7 +15,7 @@ const useCurrencyData = (): Context => {
   const [isLoading, setLoading] = useState(false);
   const [currencies, setCurrencies] = useState<ICurrency[] | undefined>();
 
-  useEffect(() => {
+  const fetchCurrencies = useCallback(async () => {
     setLoading(true);
     api
       .get('/currencies')
@@ -23,6 +23,10 @@ const useCurrencyData = (): Context => {
       .catch(err => handleErrors('Error when fetching user settings', err))
       .finally(() => setLoading(false));
   }, [handleErrors]);
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, [fetchCurrencies]);
 
   return {
     currencies,

@@ -43,7 +43,7 @@ interface IProps {
   onCancel?: () => void;
 }
 
-const EditTransactionForm: React.FC<IProps> = ({
+const UpdateTransactionForm: React.FC<IProps> = ({
   wallet,
   currencies,
   targetCurrency,
@@ -206,4 +206,4 @@ const EditTransactionForm: React.FC<IProps> = ({
   ) : null;
 };
 
-export default EditTransactionForm;
+export default UpdateTransactionForm;

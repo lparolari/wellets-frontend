@@ -26,10 +26,10 @@ import Balance from 'Components/Molecules/Balance/Balance';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import CreateTransactionForm from 'Components/Organisms/CreateTransactionForm';
 import CreateTransferForm from 'Components/Organisms/CreateTransferForm';
-import EditTransactionForm from 'Components/Organisms/EditTransactionForm';
 import Header from 'Components/Organisms/Header';
 import TransactionsHistory from 'Components/Organisms/TransactionsHistory';
 import TransfersHistory from 'Components/Organisms/TransfersHistory';
+import UpdateTransactionForm from 'Components/Organisms/UpdateTransactionForm';
 import ICurrency from 'Entities/ICurrency';
 import ITransaction from 'Entities/ITransaction';
 import IWallet from 'Entities/IWallet';
@@ -266,7 +266,7 @@ const Wallet: React.FC = () => {
                     )}
 
                     {baseCurrency && targetCurrency && transaction && (
-                      <EditTransactionForm
+                      <UpdateTransactionForm
                         wallet={wallet}
                         currencies={currencies}
                         targetCurrency={targetCurrency}

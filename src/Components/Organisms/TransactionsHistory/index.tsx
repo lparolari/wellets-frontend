@@ -1,4 +1,4 @@
-import { Skeleton } from '@chakra-ui/react';
+import { Skeleton, Stack } from '@chakra-ui/react';
 import Button from 'Components/Atoms/Button';
 import Balance from 'Components/Molecules/Balance/Balance';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
@@ -13,11 +13,13 @@ import React, { useEffect, useState } from 'react';
 interface IProps {
   walletId: string;
   updateTransactions: number;
+  onSelected?: (transaction: ITransaction) => void;
 }
 
 const TransactionHistory: React.FC<IProps> = ({
   walletId,
   updateTransactions,
+  onSelected,
 }) => {
   const [page, setPage] = useState(1);
 
@@ -97,17 +99,24 @@ const TransactionHistory: React.FC<IProps> = ({
             render(transaction: ITransaction) {
               const canRevert = !transaction.description.startsWith('Sent to');
 
-              return canRevert ? (
-                <Button
-                  onClick={() => {
-                    revertTransaction(transaction).then(() =>
-                      fetchTransactions(page),
-                    );
-                  }}
-                >
-                  Revert
-                </Button>
-              ) : null;
+              return (
+                <Stack direction="row">
+                  <Button onClick={() => onSelected && onSelected(transaction)}>
+                    Edit
+                  </Button>
+                  {canRevert ? (
+                    <Button
+                      onClick={() => {
+                        revertTransaction(transaction).then(() =>
+                          fetchTransactions(page),
+                        );
+                      }}
+                    >
+                      Revert
+                    </Button>
+                  ) : null}
+                </Stack>
+              );
             },
           },
         ]}

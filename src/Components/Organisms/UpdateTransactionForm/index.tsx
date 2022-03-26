@@ -6,8 +6,9 @@ import Input from 'Components/Atoms/Input2';
 import Radio from 'Components/Atoms/Radio2';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import ChangeRateField from 'Components/Molecules/ChangeRateField';
-import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
+import IUpdateTransactionDTO from 'DTOs/IUpdateTransactionDTO';
 import ICurrency from 'Entities/ICurrency';
+import ITransaction from 'Entities/ITransaction';
 import IWallet from 'Entities/IWallet';
 import { Formik } from 'formik';
 import { getCurrencyName } from 'Helpers/getCurrency';
@@ -16,7 +17,7 @@ import React, { useCallback, useMemo } from 'react';
 import createTransaction from 'Schemas/createTransaction';
 import api from 'Services/api';
 
-interface ICreateTransaction {
+interface IUpdateTransaction {
   value: number;
   description: string;
   type: 'incoming' | 'outcoming';
@@ -37,15 +38,19 @@ interface IProps {
   currencies: ICurrency[];
   targetCurrency: ICurrency;
   baseCurrency: ICurrency;
+  transaction: ITransaction;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-const CreateTransactionForm: React.FC<IProps> = ({
+const UpdateTransactionForm: React.FC<IProps> = ({
   wallet,
   currencies,
   targetCurrency,
   baseCurrency,
+  transaction,
   onSuccess,
+  onCancel,
 }) => {
   const toast = useToast();
   const { handleErrors } = useErrors();
@@ -55,24 +60,22 @@ const CreateTransactionForm: React.FC<IProps> = ({
     [wallet, currencies],
   );
 
-  const handleCreateTransaction = useCallback(
-    async (data: ICreateTransaction) => {
+  const handleUpdateTransaction = useCallback(
+    async (data: IUpdateTransaction) => {
       try {
         const value = data.type === 'outcoming' ? data.value * -1 : data.value;
-        const wallet_id = wallet.id;
         const dollar_rate = data.change_rate;
         const { description, created_at } = data;
 
-        await api.post('/transactions', {
+        await api.put(`/transactions/${transaction.id}`, {
           value,
-          wallet_id,
           dollar_rate,
           description,
           created_at,
-        } as ICreateTransactionDTO);
+        } as IUpdateTransactionDTO);
 
         toast({
-          title: 'A new transaction has been successfully created!',
+          title: 'The transaction has been successfully updated!',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -86,28 +89,34 @@ const CreateTransactionForm: React.FC<IProps> = ({
         handleErrors('Error when creating a new transaction', err);
       }
     },
-    [wallet.id, toast, onSuccess, handleErrors],
+    [transaction.id, toast, onSuccess, handleErrors],
   );
 
   return baseCurrency && targetCurrency ? (
     <Box w="100%">
       <Formik<IFormValues>
         initialValues={{
-          value: '',
-          description: '',
-          change_rate: '',
-          type: '',
-          created_at: '',
+          value: Math.abs(transaction.value).toString(),
+          description: transaction.description,
+          change_rate: transaction.dollar_rate.toString(),
+          type: transaction
+            ? transaction.value < 0
+              ? 'outcoming'
+              : 'incoming'
+            : '',
+          created_at: new Date(transaction.created_at)
+            .toISOString()
+            .slice(0, 19),
         }}
         enableReinitialize
         validationSchema={createTransaction}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
+        onSubmit={(values, { setSubmitting }) => {
           if (
             values.value !== '' &&
             values.description !== '' &&
             values.type !== ''
           ) {
-            handleCreateTransaction({
+            handleUpdateTransaction({
               value: Number(values.value),
               description: values.description,
               type: values.type as 'incoming' | 'outcoming',
@@ -118,7 +127,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
                 ? new Date(values.created_at)
                 : undefined,
             })
-              .then(() => resetForm())
+              .then(() => onCancel && onCancel())
               .finally(() => setSubmitting(false));
           }
         }}
@@ -177,9 +186,17 @@ const CreateTransactionForm: React.FC<IProps> = ({
                 isPrimary
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
-                colorSchema="green"
+                colorSchema="blue"
               >
-                Create
+                Update
+              </Button>
+              <Button
+                type="button"
+                isDisabled={isSubmitting}
+                isDanger
+                onClick={() => onCancel && onCancel()}
+              >
+                Cancel
               </Button>
             </Stack>
           </Form>
@@ -189,4 +206,4 @@ const CreateTransactionForm: React.FC<IProps> = ({
   ) : null;
 };
 
-export default CreateTransactionForm;
+export default UpdateTransactionForm;

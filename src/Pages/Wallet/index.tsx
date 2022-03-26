@@ -29,7 +29,9 @@ import CreateTransferForm from 'Components/Organisms/CreateTransferForm';
 import Header from 'Components/Organisms/Header';
 import TransactionsHistory from 'Components/Organisms/TransactionsHistory';
 import TransfersHistory from 'Components/Organisms/TransfersHistory';
+import UpdateTransactionForm from 'Components/Organisms/UpdateTransactionForm';
 import ICurrency from 'Entities/ICurrency';
+import ITransaction from 'Entities/ITransaction';
 import IWallet from 'Entities/IWallet';
 import {
   getCurrency,
@@ -61,6 +63,7 @@ const Wallet: React.FC = () => {
 
   const [wallet, setWallet] = useState({} as IWallet);
   const [currencies, setCurrencies] = useState([] as ICurrency[]);
+  const [transaction, setTransaction] = useState<ITransaction>();
   const [updateTransactions, setUpdateTransactions] = useState(0);
   const [updateTransfers, setUpdateTransfers] = useState(0);
   const [loadingFetchWallet, setLoadingFetchWallet] = useState(true);
@@ -80,6 +83,9 @@ const Wallet: React.FC = () => {
       })),
     [currencies],
   );
+
+  const baseCurrency = getCurrency(currencies, baseCurrencyId);
+  const targetCurrency = getCurrency(currencies, targetCurrencyId);
 
   const fetchWallet = useCallback(async () => {
     try {
@@ -138,6 +144,11 @@ const Wallet: React.FC = () => {
       setLoadingFetchUserSettings(false);
     }
   }, []);
+
+  const onTransactionUpsert = () => {
+    setUpdateTransactions(updateTransactions + 1);
+    fetchWallet();
+  };
 
   useEffect(() => {
     fetchWallet();
@@ -241,28 +252,30 @@ const Wallet: React.FC = () => {
                     <TransactionsHistory
                       walletId={params.id}
                       updateTransactions={updateTransactions}
+                      onSelected={setTransaction}
                     />
-                    {/* TODO: perf */}
-                    {getCurrency(currencies, targetCurrencyId) &&
-                      getCurrency(currencies, baseCurrencyId) && (
-                        <CreateTransactionForm
-                          wallet={wallet}
-                          currencies={currencies}
-                          targetCurrency={
-                            getCurrency(
-                              currencies,
-                              targetCurrencyId,
-                            ) as ICurrency
-                          }
-                          baseCurrency={
-                            getCurrency(currencies, baseCurrencyId) as ICurrency
-                          }
-                          onSuccess={() => {
-                            setUpdateTransactions(updateTransactions + 1);
-                            fetchWallet();
-                          }}
-                        />
-                      )}
+
+                    {baseCurrency && targetCurrency && !transaction && (
+                      <CreateTransactionForm
+                        wallet={wallet}
+                        currencies={currencies}
+                        targetCurrency={targetCurrency}
+                        baseCurrency={baseCurrency}
+                        onSuccess={onTransactionUpsert}
+                      />
+                    )}
+
+                    {baseCurrency && targetCurrency && transaction && (
+                      <UpdateTransactionForm
+                        wallet={wallet}
+                        currencies={currencies}
+                        targetCurrency={targetCurrency}
+                        baseCurrency={baseCurrency}
+                        transaction={transaction}
+                        onSuccess={onTransactionUpsert}
+                        onCancel={() => setTransaction(undefined)}
+                      />
+                    )}
                   </Stack>
                 </TabPanel>
                 <TabPanel>

@@ -6,7 +6,7 @@ import Input from 'Components/Atoms/Input2';
 import Radio from 'Components/Atoms/Radio2';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import ChangeRateField from 'Components/Molecules/ChangeRateField';
-import IUpsertTransactionDTO from 'DTOs/IUpsertTransactionDTO';
+import IUpdateTransactionDTO from 'DTOs/IUpdateTransactionDTO';
 import ICurrency from 'Entities/ICurrency';
 import ITransaction from 'Entities/ITransaction';
 import IWallet from 'Entities/IWallet';
@@ -64,17 +64,15 @@ const EditTransactionForm: React.FC<IProps> = ({
     async (data: IUpdateTransaction) => {
       try {
         const value = data.type === 'outcoming' ? data.value * -1 : data.value;
-        const wallet_id = wallet.id;
         const dollar_rate = data.change_rate;
         const { description, created_at } = data;
 
-        await api.put('/transactions', {
+        await api.put(`/transactions/${transaction.id}`, {
           value,
-          wallet_id,
           dollar_rate,
           description,
           created_at,
-        } as IUpsertTransactionDTO);
+        } as IUpdateTransactionDTO);
 
         toast({
           title: 'The transaction has been successfully updated!',
@@ -91,7 +89,7 @@ const EditTransactionForm: React.FC<IProps> = ({
         handleErrors('Error when creating a new transaction', err);
       }
     },
-    [wallet.id, toast, onSuccess, handleErrors],
+    [transaction.id, toast, onSuccess, handleErrors],
   );
 
   return baseCurrency && targetCurrency ? (
@@ -112,7 +110,7 @@ const EditTransactionForm: React.FC<IProps> = ({
         }}
         enableReinitialize
         validationSchema={createTransaction}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
+        onSubmit={(values, { setSubmitting }) => {
           if (
             values.value !== '' &&
             values.description !== '' &&
@@ -129,7 +127,7 @@ const EditTransactionForm: React.FC<IProps> = ({
                 ? new Date(values.created_at)
                 : undefined,
             })
-              .then(() => resetForm())
+              .then(() => onCancel && onCancel())
               .finally(() => setSubmitting(false));
           }
         }}

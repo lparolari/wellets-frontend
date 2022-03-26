@@ -6,7 +6,7 @@ import Input from 'Components/Atoms/Input2';
 import Radio from 'Components/Atoms/Radio2';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import ChangeRateField from 'Components/Molecules/ChangeRateField';
-import IUpsertTransactionDTO from 'DTOs/IUpsertTransactionDTO';
+import ICreateTransactionDTO from 'DTOs/ICreateTransactionDTO';
 import ICurrency from 'Entities/ICurrency';
 import IWallet from 'Entities/IWallet';
 import { Formik } from 'formik';
@@ -69,7 +69,7 @@ const CreateTransactionForm: React.FC<IProps> = ({
           dollar_rate,
           description,
           created_at,
-        } as IUpsertTransactionDTO);
+        } as ICreateTransactionDTO);
 
         toast({
           title: 'A new transaction has been successfully created!',

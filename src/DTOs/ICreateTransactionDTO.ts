@@ -1,4 +1,4 @@
-interface IUpsertTransactionDTO {
+interface ICreateTransactionDTO {
   wallet_id: string;
   value: number;
   description: string;
@@ -6,4 +6,4 @@ interface IUpsertTransactionDTO {
   created_at?: Date;
 }
 
-export default IUpsertTransactionDTO;
+export default ICreateTransactionDTO;

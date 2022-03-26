@@ -44,6 +44,8 @@ import { FiRefreshCw } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
 import api from 'Services/api';
 
+import useFetchWalletStatistics from './useFetchWalletStatistics';
+
 interface IParams {
   id: string;
 }
@@ -74,6 +76,8 @@ const Wallet: React.FC = () => {
   const [targetCurrencyId, setTargetCurrencyId] = useState('');
   const [baseCurrencyId, setBaseCurrencyId] = useState('');
   const [balance, setBalance] = useState(0);
+  const { statistics, isFetching: loadingFetchStatistcs } =
+    useFetchWalletStatistics(params.id);
 
   const currenciesOptions = useMemo<IOption[]>(
     () =>
@@ -188,10 +192,11 @@ const Wallet: React.FC = () => {
               !loadingFetchWallet &&
               !loadingFetchCurrencies &&
               !loadingFetchBalance &&
-              !loadingFetchUserSettings
+              !loadingFetchUserSettings &&
+              !loadingFetchStatistcs
             }
           >
-            <SimpleGrid columns={2} spacing={10}>
+            <SimpleGrid columns={3} spacing={10}>
               <Box>
                 <Stat>
                   <StatLabel>Total balance</StatLabel>
@@ -209,6 +214,15 @@ const Wallet: React.FC = () => {
                       }
                       currency={getCurrencyName(currencies, baseCurrencyId)}
                     />
+                  </StatNumber>
+                </Stat>
+              </Box>
+              <Box>
+                <Stat>
+                  <StatLabel>Average load price</StatLabel>
+                  <StatNumber>
+                    {statistics && statistics.average_load_price}{' '}
+                    {statistics && statistics.base_currency.acronym}
                   </StatNumber>
                 </Stat>
               </Box>

@@ -21,7 +21,7 @@ import upsertPortfolio from 'Schemas/upsertPortfolio';
 import api from 'Services/api';
 
 interface IProps {
-  currentPortfolio: IPortfolio;
+  currentPortfolio?: IPortfolio;
   defaultParentPortfolio?: IPortfolio;
   onSuccess?: () => void;
   onCancelUpdate?: () => void;
@@ -94,14 +94,14 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
 
   const handleUpsertPortfolio = useCallback(
     async (formData: IFormPortfolioDTO) => {
-      const isUpdate = !!currentPortfolio.id;
+      const isUpdate = !!currentPortfolio;
 
       const data: IUpsertPortfolioDTO = {
         alias: formData.alias,
         weight: formData.weight / 100,
         parent_id: formData.parent ? `${formData.parent?.value}` : undefined,
         wallet_ids: formData.wallets
-          ? formData.wallets?.map((wallet: IOption) => `${wallet.value}`)
+          ? formData.wallets.map((wallet: IOption) => `${wallet.value}`)
           : [],
       };
 
@@ -148,14 +148,14 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
   );
 
   useEffect(() => {
-    if (currentPortfolio.id) {
+    if (currentPortfolio) {
       formRef.current?.setData({
         id: currentPortfolio.id,
         alias: currentPortfolio.alias,
         weight: currentPortfolio.weight * 100,
         parent: currentPortfolio.parent
           ? portfolioToOption(currentPortfolio.parent)
-          : null,
+          : undefined,
         wallets: currentPortfolio.wallets.map(wallet => ({
           value: wallet.id,
           label: wallet.alias,
@@ -223,9 +223,9 @@ const UpsertPortfolioForm: React.FC<IProps> = ({
             colorSchema="blue"
             isPrimary
           >
-            {currentPortfolio.id ? 'Update' : 'Create'}
+            {currentPortfolio ? 'Update' : 'Create'}
           </Button>
-          {currentPortfolio.id && (
+          {currentPortfolio && (
             <Button type="button" onClick={onCancelUpdate} isDanger>
               Cancel
             </Button>

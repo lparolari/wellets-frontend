@@ -26,7 +26,6 @@ export interface IProps extends SelectProps {
   isMulti?: boolean;
 }
 
-// TODO: replace the following component with advanced select
 const BetterSelect: React.FC<any> = ({
   name,
   label,
@@ -44,17 +43,20 @@ const BetterSelect: React.FC<any> = ({
     registerField({
       name: fieldName,
       ref: selectRef.current,
-      getValue: (ref: any) => {
-        if (isMulti) return ref.state.selectValue;
-        return ref.state.selectValue[0];
+      getValue: (ref: any) =>
+        isMulti ? ref.state.selectValue : ref.state.selectValue[0],
+      clearValue: (ref: any) => {
+        ref.state.selectValue = [];
+        setValue([]);
       },
-      clearValue(ref) {
-        ref.state.selectValue = isMulti ? [] : null;
-        setValue(undefined);
-      },
-      setValue(ref, newValue: any) {
-        ref.state.selectValue = newValue;
-        setValue(newValue);
+      setValue: (ref: any, newValue: any) => {
+        if (isMulti) {
+          ref.state.selectValue = newValue;
+          setValue(newValue);
+        } else {
+          ref.state.selectValue = newValue ? [newValue] : [];
+          setValue(newValue ? [newValue] : []);
+        }
       },
     });
   }, [fieldName, registerField, isMulti]);

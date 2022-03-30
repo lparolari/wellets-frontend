@@ -49,7 +49,7 @@ const Portfolio: React.FC = () => {
   });
 
   const [userSettings, setUserSettings] = useState({} as IUserSettings);
-  const [selectedPortfolio, setSelectedPortfolio] = useState({} as IPortfolio);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<IPortfolio>();
   const [currentPortfolio, setCurrentPortfolio] = useState({} as IPortfolio);
   const [portfolioBalance, setPortfolioBalance] = useState(0);
   const [portfolios, setPortfolios] = useState([] as IPortfolio[]);
@@ -351,12 +351,12 @@ const Portfolio: React.FC = () => {
 
           <UpsertPortfolioForm
             onSuccess={() => {
-              setSelectedPortfolio({} as IPortfolio);
+              setSelectedPortfolio(undefined);
               fetchPortfolios();
             }}
             currentPortfolio={selectedPortfolio}
             defaultParentPortfolio={currentPortfolio}
-            onCancelUpdate={() => setSelectedPortfolio({} as IPortfolio)}
+            onCancelUpdate={() => setSelectedPortfolio(undefined)}
           />
         </Stack>
       </ContentContainer>

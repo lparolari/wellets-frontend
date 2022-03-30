@@ -32,7 +32,7 @@ const Input: React.FC<IProps> = ({
   const [field, meta, helpers] = useField(name);
 
   const { onChange } = field;
-  const { value, initialValue, error, touched } = meta;
+  const { value, error, touched } = meta;
   const { setTouched } = helpers;
 
   // States
@@ -56,7 +56,6 @@ const Input: React.FC<IProps> = ({
           onChange={onChange}
           onBlur={() => setTouched(true)}
           type={inputType}
-          defaultValue={initialValue}
           step={type === 'number' ? '0.000000000000001' : ''}
           {...rest}
         />

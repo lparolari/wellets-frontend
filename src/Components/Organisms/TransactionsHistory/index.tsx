@@ -5,6 +5,7 @@ import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import Table from 'Components/Molecules/Table';
 import ITransaction from 'Entities/ITransaction';
 import compareDate from 'Helpers/compareDate';
+import { changeFrom2 } from 'Helpers/converter';
 import formatDate from 'Helpers/formatDate';
 import useBaseCurrencyData from 'Hooks/useBaseCurrencyData';
 import useTransactionData from 'Hooks/useTransactionData';
@@ -67,9 +68,10 @@ const TransactionHistory: React.FC<IProps> = ({
                   <Balance balance={value} currency={wallet.currency.acronym} />
                   <BalanceBadge
                     balance={value}
-                    dollar_rate={
-                      baseCurrency.dollar_rate * wallet.currency.dollar_rate
-                    }
+                    dollar_rate={changeFrom2(
+                      wallet.currency.dollar_rate,
+                      baseCurrency.dollar_rate,
+                    )}
                     currency={baseCurrency.acronym}
                   />
                 </>

@@ -115,7 +115,7 @@ const Portfolio: React.FC = () => {
 
   return (
     <PageContainer>
-      <Header color="purple" />
+      <Header color="pink" />
 
       <ContentContainer flexDirection="column" justifyContent="start">
         <Skeleton isLoaded={!loadingFetchPortfolio}>

@@ -78,7 +78,7 @@ const WalletDetails: React.FC = () => {
 
   return (
     <PageContainer>
-      <Header />
+      <Header color="green" />
 
       <ContentContainer flexDirection="column" justifyContent="start">
         <Skeleton isLoaded={!loadingFetchWallet}>

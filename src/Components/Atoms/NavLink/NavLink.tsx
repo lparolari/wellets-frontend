@@ -9,28 +9,33 @@ interface IProps {
   children: ReactNode;
 }
 
-const NavLink: React.FC<IProps> = ({ to, location, color, children }) => (
-  <Link
-    as={RRDLink}
-    to={to}
-    px={2}
-    py={1}
-    rounded="md"
-    aria-current={location?.pathname === to ? 'page' : undefined}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    _activeLink={{
-      textDecoration: 'none',
-      bg: useColorModeValue(
-        `${color || 'green'}.300`,
-        `${color || 'green'}.700`,
-      ),
-    }}
-  >
-    {children}
-  </Link>
-);
+const NavLink: React.FC<IProps> = ({ to, location, color, children }) => {
+  const rootPathname =
+    location?.pathname && `/${location?.pathname.split('/')[1]}`;
+
+  return (
+    <Link
+      as={RRDLink}
+      to={to}
+      px={2}
+      py={1}
+      rounded="md"
+      aria-current={rootPathname === to ? 'page' : undefined}
+      _hover={{
+        textDecoration: 'none',
+        bg: useColorModeValue('gray.200', 'gray.700'),
+      }}
+      _activeLink={{
+        textDecoration: 'none',
+        bg: useColorModeValue(
+          `${color || 'gray'}.300`,
+          `${color || 'gray'}.700`,
+        ),
+      }}
+    >
+      {children}
+    </Link>
+  );
+};
 
 export default NavLink;

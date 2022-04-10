@@ -1,5 +1,6 @@
 import ICurrency from './ICurrency';
 import IPortfolio from './IPortfolio';
+import IWallet from './IWallet';
 
 export interface IAction {
   type: 'buy' | 'sell';
@@ -8,6 +9,7 @@ export interface IAction {
 
 export interface IChange {
   portfolio: IPortfolio;
+  wallets: IWallet[];
   target: number;
   actual: number;
   off_by: number;

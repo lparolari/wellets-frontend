@@ -1,5 +1,7 @@
 import {
+  Badge,
   Box,
+  Flex,
   Heading,
   Link,
   Menu,
@@ -28,6 +30,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { LabelList, Pie, PieChart, Tooltip } from 'recharts';
 import api from 'Services/api';
+
+import { isWalletChild } from './utils';
 
 interface IParams {
   id: string;
@@ -146,20 +150,29 @@ const Portfolio: React.FC = () => {
                         </Link>{' '}
                         <Menu>
                           <MenuButton as={Link}>
-                            ({x.portfolio.wallets.length})
+                            ({x.wallets.length})
                           </MenuButton>
                           <MenuList>
-                            {x.portfolio.wallets.length ? (
+                            {x.wallets.length ? (
                               <>
                                 <MenuGroup>
-                                  {x.portfolio.wallets.map(w => (
+                                  {x.wallets.map(w => (
                                     <MenuItem
                                       key={w.id}
                                       onClick={() =>
                                         history.push(`/wallets/${w.id}`)
                                       }
                                     >
-                                      {w.alias}
+                                      <Flex
+                                        direction="row"
+                                        justify="space-between"
+                                        flex="1"
+                                      >
+                                        {w.alias}
+                                        {isWalletChild(w, x.portfolio) && (
+                                          <Badge>child</Badge>
+                                        )}
+                                      </Flex>
                                     </MenuItem>
                                   ))}
                                 </MenuGroup>
@@ -172,7 +185,7 @@ const Portfolio: React.FC = () => {
                                       )
                                     }
                                   >
-                                    Show all
+                                    View wallets beloging to {x.portfolio.alias}
                                   </MenuItem>
                                 </MenuGroup>
                               </>

@@ -4,7 +4,7 @@ const ContentContainer = chakra(Flex, {
   baseStyle: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '25px',
+    padding: '1rem',
     flex: '1',
   },
 });

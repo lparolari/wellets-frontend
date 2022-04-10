@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Heading,
-  Link,
   LinkOverlay,
   SimpleGrid,
   Skeleton,
@@ -14,6 +13,7 @@ import {
   useBreakpointValue,
   useToast,
 } from '@chakra-ui/react';
+import { Breadcrumb } from 'Components/Atoms/Breadcrumb';
 import Button from 'Components/Atoms/Button';
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import PageContainer from 'Components/Atoms/PageContainer';
@@ -25,8 +25,8 @@ import IPortfolio from 'Entities/IPortfolio';
 import IUserSettings from 'Entities/IUserSettings';
 import { useErrors } from 'Hooks/errors';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiCheckCircle, FiCornerLeftUp } from 'react-icons/fi';
-import { useHistory, useParams } from 'react-router-dom';
+import { FiCheckCircle } from 'react-icons/fi';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import api from 'Services/api';
 
 interface IParams {
@@ -186,16 +186,47 @@ const Portfolio: React.FC = () => {
     <PageContainer>
       <Header color="pink" />
 
-      <ContentContainer flexDirection="column" justifyContent="start">
+      <Box m="1rem">
         <Skeleton isLoaded={!loadingFetchCurrentPortfolios}>
-          <Heading>
-            {currentPortfolio.id
-              ? `${currentPortfolio.alias} Portfolio`
-              : `Portfolios`}
-          </Heading>
+          <Breadcrumb
+            items={[
+              { label: 'Wellets', to: '/' },
+              { label: 'Portfolios', to: '/portfolios' },
+              ...(currentPortfolio.id
+                ? currentPortfolio.parent
+                  ? [
+                      {
+                        label: currentPortfolio.parent.alias,
+                        to: `/portfolios/${currentPortfolio.parent.id}`,
+                      },
+                    ]
+                  : []
+                : []),
+              ...(currentPortfolio.id
+                ? [
+                    {
+                      label: currentPortfolio.alias,
+                      to: `/portfolios/${currentPortfolio.id}`,
+                    },
+                  ]
+                : []),
+            ]}
+          />
         </Skeleton>
+      </Box>
 
-        <Box mt="10px" w="100%">
+      <ContentContainer flexDirection="column" justifyContent="start">
+        <Box>
+          <Skeleton isLoaded={!loadingFetchCurrentPortfolios}>
+            <Heading>
+              {currentPortfolio.id
+                ? `${currentPortfolio.alias} Portfolio`
+                : `Portfolios`}
+            </Heading>
+          </Skeleton>
+        </Box>
+
+        <Box mt="1rem" w="100%">
           <Skeleton
             isLoaded={
               !loadingFetchPortfolioBalance && !loadingFetchUserSettings
@@ -216,49 +247,27 @@ const Portfolio: React.FC = () => {
 
               <Box>
                 <Flex justifyContent="end">
-                  <Stack direction="row" spacing="12px">
-                    {currentPortfolio.id && (
-                      <>
-                        <Button
-                          onClick={() =>
-                            history.push(
-                              `/portfolios/${
-                                currentPortfolio.id
-                                  ? `${currentPortfolio.id}/`
-                                  : ''
-                              }rebalance`,
-                            )
-                          }
-                          rightIcon={<FiCheckCircle />}
-                        >
-                          Rebalance
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            history.push(
-                              `/portfolios${
-                                currentPortfolio.parent
-                                  ? `/${currentPortfolio.parent.id}`
-                                  : ''
-                              }`,
-                            )
-                          }
-                          variant="outline"
-                          aria-label="Back"
-                          rightIcon={<FiCornerLeftUp />}
-                        >
-                          Back to parent
-                        </Button>
-                      </>
-                    )}
-                  </Stack>
+                  {currentPortfolio.id && (
+                    <Button
+                      onClick={() =>
+                        history.push(
+                          `/portfolios/${
+                            currentPortfolio.id ? `${currentPortfolio.id}/` : ''
+                          }rebalance`,
+                        )
+                      }
+                      rightIcon={<FiCheckCircle />}
+                    >
+                      Rebalance
+                    </Button>
+                  )}
                 </Flex>
               </Box>
             </SimpleGrid>
           </Skeleton>
         </Box>
 
-        <Stack mt="50px" w="100%" direction={stack?.direction} spacing="25px">
+        <Stack mt="1rem" w="100%" direction={stack?.direction} spacing="2rem">
           <Skeleton isLoaded={!loadingFetchPortfolios}>
             <Table
               rows={portfolios}
@@ -267,7 +276,7 @@ const Portfolio: React.FC = () => {
                   title: 'Portfolio',
                   key: 'alias',
                   render(x: IPortfolio) {
-                    return <Link href={`/portfolios/${x.id}`}>{x.alias}</Link>;
+                    return <Link to={`/portfolios/${x.id}`}>{x.alias}</Link>;
                   },
                 },
                 {
@@ -284,7 +293,7 @@ const Portfolio: React.FC = () => {
                     return (
                       <>
                         {x.children.map((child, i) => (
-                          <Link href={`/portfolios/${child.id}`} key={child.id}>
+                          <Link to={`/portfolios/${child.id}`} key={child.id}>
                             {`${child.alias}${
                               i === x.children.length - 1 ? '' : ', '
                             }`}
@@ -301,7 +310,7 @@ const Portfolio: React.FC = () => {
                     return (
                       <>
                         {x.wallets.map((wallet, i) => (
-                          <Link href={`/wallets/${wallet.id}`} key={wallet.id}>
+                          <Link to={`/wallets/${wallet.id}`} key={wallet.id}>
                             {`${wallet.alias}${
                               i === x.wallets.length - 1 ? '' : ', '
                             }`}
@@ -319,7 +328,7 @@ const Portfolio: React.FC = () => {
                       <Flex>
                         <Button mr="10px">
                           <LinkOverlay href={`/portfolios/${x.id}/rebalance`}>
-                            View
+                            Rebalance
                           </LinkOverlay>
                         </Button>
                         <Button

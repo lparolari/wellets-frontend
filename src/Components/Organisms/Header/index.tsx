@@ -31,7 +31,7 @@ interface IProps {
 
 const Header: React.FC<IProps> = ({ color }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const history = useHistory();
 
   return (
@@ -70,6 +70,12 @@ const Header: React.FC<IProps> = ({ color }) => {
                 Settings
               </MenuItem>
               <MenuDivider />
+              {user && (
+                <>
+                  <MenuItem>Hello {user && user.email}</MenuItem>
+                  <MenuDivider />
+                </>
+              )}
               <MenuItem onClick={signOut}>Log out</MenuItem>
             </MenuList>
           </Menu>

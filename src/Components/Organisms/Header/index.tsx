@@ -25,6 +25,7 @@ import NavLink from '../../Atoms/NavLink/NavLink';
 import Links from '../../Molecules/HeaderLinks/HeaderLinks';
 
 interface IProps {
+  // use only colors that defines a palette
   color?: string;
 }
 

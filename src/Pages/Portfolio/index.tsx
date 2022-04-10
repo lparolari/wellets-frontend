@@ -25,7 +25,7 @@ import IPortfolio from 'Entities/IPortfolio';
 import IUserSettings from 'Entities/IUserSettings';
 import { useErrors } from 'Hooks/errors';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiCheckCircle, FiCornerLeftUp } from 'react-icons/fi';
+import { FiCheckCircle } from 'react-icons/fi';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import api from 'Services/api';
 

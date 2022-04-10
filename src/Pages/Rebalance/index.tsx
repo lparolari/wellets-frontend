@@ -15,6 +15,7 @@ import {
   StackDirection,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import { Breadcrumb } from 'Components/Atoms/Breadcrumb';
 import ContentContainer from 'Components/Atoms/ContentContainer';
 import PageContainer from 'Components/Atoms/PageContainer';
 import Space from 'Components/Atoms/Space/Space';
@@ -117,6 +118,35 @@ const Portfolio: React.FC = () => {
     <PageContainer>
       <Header color="pink" />
 
+      <Box m="1rem">
+        <Skeleton isLoaded={!loadingFetchPortfolio}>
+          <Breadcrumb
+            items={[
+              { label: 'Wellets', to: '/' },
+              { label: 'Portfolios', to: '/portfolios' },
+              ...(portfolio.id
+                ? portfolio.parent
+                  ? [
+                      {
+                        label: portfolio.parent.alias,
+                        to: `/portfolios/${portfolio.parent.id}`,
+                      },
+                    ]
+                  : []
+                : []),
+              ...(portfolio.id
+                ? [
+                    {
+                      label: portfolio.alias,
+                      to: `/portfolios/${portfolio.id}`,
+                    },
+                  ]
+                : []),
+            ]}
+          />
+        </Skeleton>
+      </Box>
+
       <ContentContainer flexDirection="column" justifyContent="start">
         <Skeleton isLoaded={!loadingFetchPortfolio}>
           <Heading>
@@ -126,10 +156,10 @@ const Portfolio: React.FC = () => {
         </Skeleton>
 
         <Stack
-          mt="50px"
+          mt="1rem"
           w="100%"
           direction={stack?.direction}
-          spacing="25px"
+          spacing="2rem"
           justifyContent="center"
         >
           <Skeleton isLoaded={!loadingFetchAllocation}>

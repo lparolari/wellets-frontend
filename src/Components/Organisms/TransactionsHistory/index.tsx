@@ -82,6 +82,23 @@ const TransactionHistory: React.FC<IProps> = ({
             },
           },
           {
+            title: 'Equivalent',
+            key: 'equivalent',
+            render(transaction: ITransaction) {
+              const { value, dollar_rate } = transaction;
+              return (
+                <Balance
+                  balance={value}
+                  currency={baseCurrency.acronym}
+                  dollar_rate={changeFrom2(
+                    dollar_rate,
+                    baseCurrency.dollar_rate,
+                  )}
+                />
+              );
+            },
+          },
+          {
             title: 'Change rate',
             key: 'change_rate',
             render(transaction: ITransaction) {
@@ -89,8 +106,11 @@ const TransactionHistory: React.FC<IProps> = ({
               return (
                 <Balance
                   balance={1}
-                  dollar_rate={dollar_rate / baseCurrency.dollar_rate}
                   currency={baseCurrency.acronym}
+                  dollar_rate={changeFrom2(
+                    dollar_rate,
+                    baseCurrency.dollar_rate,
+                  )}
                 />
               );
             },

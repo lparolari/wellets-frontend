@@ -1,5 +1,7 @@
 import formatBalance from 'Helpers/formatBalance';
-import React, { Fragment } from 'react';
+import React from 'react';
+
+import useStyles from './Balance.styles';
 
 type IProps = {
   balance?: number;
@@ -17,13 +19,15 @@ const Balance: React.FC<IProps> = ({
   maximumFractionDigits = 2,
   ...rest
 }) => {
+  const classes = useStyles();
+
   if (!balance && balance !== 0) return null;
 
   const finalBalance = balance / dollar_rate;
 
   try {
     return (
-      <>
+      <span className={classes.balance}>
         {formatBalance(finalBalance, locales, {
           style,
           currency,
@@ -31,13 +35,13 @@ const Balance: React.FC<IProps> = ({
           maximumFractionDigits,
           ...rest,
         })}
-      </>
+      </span>
     );
   } catch (e) {
     return (
-      <>
+      <span className={classes.balance}>
         `${currency} ${finalBalance.toFixed(maximumFractionDigits)}`
-      </>
+      </span>
     );
   }
 };

@@ -22,6 +22,7 @@ import Form from 'Components/Atoms/Form';
 import PageContainer from 'Components/Atoms/PageContainer';
 import Select, { IOption } from 'Components/Atoms/Select';
 import Space from 'Components/Atoms/Space/Space';
+import AverageLoadPriceStat from 'Components/Molecules/AverageLoadPriceStat';
 import Balance from 'Components/Molecules/Balance/Balance';
 import BalanceBadge from 'Components/Molecules/Balance/BalanceBadge';
 import CreateTransactionForm from 'Components/Organisms/CreateTransactionForm';
@@ -44,8 +45,6 @@ import { FiRefreshCw } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
 import api from 'Services/api';
 
-import useFetchWalletStatistics from './useFetchWalletStatistics';
-
 interface IParams {
   id: string;
 }
@@ -63,6 +62,8 @@ const Wallet: React.FC = () => {
     },
   });
 
+  const walletId = params.id;
+
   const [wallet, setWallet] = useState({} as IWallet);
   const [currencies, setCurrencies] = useState([] as ICurrency[]);
   const [transaction, setTransaction] = useState<ITransaction>();
@@ -76,8 +77,6 @@ const Wallet: React.FC = () => {
   const [targetCurrencyId, setTargetCurrencyId] = useState('');
   const [baseCurrencyId, setBaseCurrencyId] = useState('');
   const [balance, setBalance] = useState(0);
-  const { statistics, isFetching: loadingFetchStatistcs } =
-    useFetchWalletStatistics(params.id);
 
   const currenciesOptions = useMemo<IOption[]>(
     () =>
@@ -192,63 +191,63 @@ const Wallet: React.FC = () => {
               !loadingFetchWallet &&
               !loadingFetchCurrencies &&
               !loadingFetchBalance &&
-              !loadingFetchUserSettings &&
-              !loadingFetchStatistcs
+              !loadingFetchUserSettings
             }
+            height="3rem"
           >
-            <SimpleGrid columns={3} spacing={10}>
-              <Box>
-                <Stat>
-                  <StatLabel>Total balance</StatLabel>
-                  <StatNumber>
-                    <Balance
-                      balance={balance}
-                      currency={getCurrencyName(currencies, targetCurrencyId)}
-                    />
-                    <Space />
-                    <BalanceBadge
-                      balance={balance}
-                      dollar_rate={
-                        getCurrencyDollarRate(currencies, targetCurrencyId) /
-                        getCurrencyDollarRate(currencies, baseCurrencyId)
-                      }
-                      currency={getCurrencyName(currencies, baseCurrencyId)}
-                    />
-                  </StatNumber>
-                </Stat>
-              </Box>
-              <Box>
-                <Stat>
-                  <StatLabel>Average load price</StatLabel>
-                  <StatNumber>
-                    {statistics && statistics.average_load_price}{' '}
-                    {statistics && statistics.base_currency.acronym}
-                  </StatNumber>
-                </Stat>
-              </Box>
+            {baseCurrency && (
+              <SimpleGrid columns={3} spacing={10}>
+                <Box>
+                  <Stat>
+                    <StatLabel>Total balance</StatLabel>
+                    <StatNumber>
+                      <Balance
+                        balance={balance}
+                        currency={getCurrencyName(currencies, targetCurrencyId)}
+                      />
+                      <Space />
+                      <BalanceBadge
+                        balance={balance}
+                        dollar_rate={
+                          getCurrencyDollarRate(currencies, targetCurrencyId) /
+                          getCurrencyDollarRate(currencies, baseCurrencyId)
+                        }
+                        currency={getCurrencyName(currencies, baseCurrencyId)}
+                      />
+                    </StatNumber>
+                  </Stat>
+                </Box>
 
-              <Box>
-                <Flex justifyContent="end">
-                  <Form onSubmit={() => fetchBalance(targetCurrencyId)}>
-                    <Stack spacing="10px" direction="row">
-                      <Select
-                        onChange={e => setTargetCurrencyId(e.target.value)}
-                        name="base_currency_id"
-                        options={currenciesOptions}
-                        value={targetCurrencyId}
-                      />
-                      <IconButton
-                        type="submit"
-                        colorScheme="green"
-                        variant="outline"
-                        aria-label="Refresh"
-                        icon={<FiRefreshCw />}
-                      />
-                    </Stack>
-                  </Form>
-                </Flex>
-              </Box>
-            </SimpleGrid>
+                <Box>
+                  <AverageLoadPriceStat
+                    walletId={walletId}
+                    baseCurrency={baseCurrency}
+                  />
+                </Box>
+
+                <Box>
+                  <Flex justifyContent="end">
+                    <Form onSubmit={() => fetchBalance(targetCurrencyId)}>
+                      <Stack spacing="10px" direction="row">
+                        <Select
+                          onChange={e => setTargetCurrencyId(e.target.value)}
+                          name="base_currency_id"
+                          options={currenciesOptions}
+                          value={targetCurrencyId}
+                        />
+                        <IconButton
+                          type="submit"
+                          colorScheme="green"
+                          variant="outline"
+                          aria-label="Refresh"
+                          icon={<FiRefreshCw />}
+                        />
+                      </Stack>
+                    </Form>
+                  </Flex>
+                </Box>
+              </SimpleGrid>
+            )}
           </Skeleton>
         </Box>
 

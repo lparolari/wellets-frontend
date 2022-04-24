@@ -6,34 +6,17 @@ import Balance from 'Components/Molecules/Balance/Balance';
 import Table from 'Components/Molecules/Table';
 import Header from 'Components/Organisms/Header';
 import ICurrency from 'Entities/ICurrency';
-import { useErrors } from 'Hooks/errors';
 import useFetchCurrencies from 'Hooks/useFetchCurrencies';
-import React, { useCallback, useEffect, useState } from 'react';
+import useUpdateCurrency from 'Hooks/useUpdateCurrency';
+import React, { useEffect, useState } from 'react';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
-import api from 'Services/api';
 
 const Currencies: React.FC = () => {
-  const { handleErrors } = useErrors();
+  const { currencies, isFetching, fetchCurrencies, replaceCurrency } =
+    useFetchCurrencies();
+  const { updateCurrency } = useUpdateCurrency();
 
-  const { currencies, isFetching, fetchCurrencies } = useFetchCurrencies();
-
-  const [loadingMarkAsFavoriteCurrency, setLoadingMarkAsFavoriteCurrency] =
-    useState(-1);
-
-  const handleToggleFavoriteCurrency = useCallback(
-    async (index: number, id: string, favorite: boolean) => {
-      try {
-        setLoadingMarkAsFavoriteCurrency(index);
-        await api.put(`/currencies/${id}`, { favorite });
-        // fetchAllCurrencies(false);
-      } catch (err) {
-        handleErrors('Error when toggling favorite currency', err);
-      } finally {
-        setLoadingMarkAsFavoriteCurrency(-1);
-      }
-    },
-    [handleErrors],
-  );
+  const [updatingIndex, setUpdatingIndex] = useState<number>();
 
   useEffect(() => {
     fetchCurrencies();
@@ -56,7 +39,7 @@ const Currencies: React.FC = () => {
 
       <ContentContainer flexDirection="column" justifyContent="start">
         <Box mb="1rem">
-          <Heading>All Currencies</Heading>
+          <Heading>Currencies</Heading>
         </Box>
 
         <Box mt="1rem">
@@ -109,14 +92,18 @@ const Currencies: React.FC = () => {
                           )
                         }
                         aria-label="Mark as favorite"
-                        isLoading={loadingMarkAsFavoriteCurrency === index}
-                        onClick={() =>
-                          handleToggleFavoriteCurrency(
-                            index,
-                            currency.id,
-                            !currency.favorite,
-                          )
-                        }
+                        isLoading={updatingIndex === index}
+                        onClick={() => {
+                          setUpdatingIndex(index);
+                          updateCurrency({
+                            id: currency.id,
+                            currency: { favorite: !currency.favorite },
+                            onUpdated: (newCurrency: ICurrency) => {
+                              replaceCurrency(newCurrency);
+                              setUpdatingIndex(undefined);
+                            },
+                          });
+                        }}
                       />
                     );
                   },

@@ -74,6 +74,10 @@ const Table: React.FC<IProps> = ({ columns, rows, pagination }) => {
   });
 
   useEffect(() => {
+    setData(rows);
+  }, [rows]);
+
+  useEffect(() => {
     if (!sortOrder) return;
 
     const sortedData = [...rows].sort(sortBy);

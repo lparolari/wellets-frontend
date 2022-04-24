@@ -15,7 +15,7 @@ import {
 import AdvancedSelect, { IOption } from 'Components/Atoms/AdvancedSelect';
 import Button from 'Components/Atoms/Button';
 import ICurrency from 'Entities/ICurrency';
-import useCurrencyData from 'Hooks/useCurrencyData';
+import useFetchCurrencies from 'Hooks/useFetchCurrencies';
 import * as R from 'ramda';
 import React, { useEffect, useState } from 'react';
 
@@ -47,7 +47,7 @@ const ChangeRate = ({
   onClose,
   ...rest
 }: IProps) => {
-  const { currencies } = useCurrencyData();
+  const { currencies, fetchCurrencies } = useFetchCurrencies();
 
   const [changeCurrency, setChangeCurrency] = useState<ICurrency>(baseCurrency);
   const [changeValue, setChangeValue] = useState('');
@@ -72,6 +72,10 @@ const ChangeRate = ({
     closeModal();
     if (onClose) onClose();
   };
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, [fetchCurrencies]);
 
   useEffect(() => {
     const valueInTargetCurrency = 1 / targetCurrency.dollar_rate;

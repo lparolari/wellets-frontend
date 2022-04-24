@@ -7,6 +7,7 @@ import Table from 'Components/Molecules/Table';
 import Header from 'Components/Organisms/Header';
 import ICurrency from 'Entities/ICurrency';
 import { useErrors } from 'Hooks/errors';
+import useFetchCurrencies from 'Hooks/useFetchCurrencies';
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import api from 'Services/api';
@@ -14,45 +15,29 @@ import api from 'Services/api';
 const Currencies: React.FC = () => {
   const { handleErrors } = useErrors();
 
+  const { currencies, isFetching, fetchCurrencies } = useFetchCurrencies();
+
   const [loadingMarkAsFavoriteCurrency, setLoadingMarkAsFavoriteCurrency] =
     useState(-1);
-  const [loadingFetchAllCurrencies, setLoadingFetchAllCurrencies] =
-    useState(false);
-  const [allCurrencies, setAllCurrencies] = useState([] as ICurrency[]);
-
-  const fetchAllCurrencies = useCallback(
-    async (loadingEnabled = true) => {
-      try {
-        if (loadingEnabled) setLoadingFetchAllCurrencies(true);
-        const response = await api.get('/currencies');
-        setAllCurrencies(response.data);
-      } catch (err) {
-        handleErrors('Error when fetching all currencies', err);
-      } finally {
-        if (loadingEnabled) setLoadingFetchAllCurrencies(false);
-      }
-    },
-    [handleErrors],
-  );
 
   const handleToggleFavoriteCurrency = useCallback(
     async (index: number, id: string, favorite: boolean) => {
       try {
         setLoadingMarkAsFavoriteCurrency(index);
         await api.put(`/currencies/${id}`, { favorite });
-        fetchAllCurrencies(false);
+        // fetchAllCurrencies(false);
       } catch (err) {
         handleErrors('Error when toggling favorite currency', err);
       } finally {
         setLoadingMarkAsFavoriteCurrency(-1);
       }
     },
-    [handleErrors, fetchAllCurrencies],
+    [handleErrors],
   );
 
   useEffect(() => {
-    fetchAllCurrencies();
-  }, [fetchAllCurrencies]);
+    fetchCurrencies();
+  }, [fetchCurrencies]);
 
   return (
     <PageContainer>
@@ -75,9 +60,9 @@ const Currencies: React.FC = () => {
         </Box>
 
         <Box mt="1rem">
-          <Skeleton isLoaded={!loadingFetchAllCurrencies}>
+          <Skeleton isLoaded={!isFetching}>
             <Table
-              rows={allCurrencies}
+              rows={currencies || []}
               columns={[
                 {
                   title: 'Acronym',

@@ -1,37 +1,36 @@
 import ICurrency from 'Entities/ICurrency';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import api from 'Services/api';
 
 import { useErrors } from './errors';
 
-type Context = {
-  currencies?: ICurrency[];
-  isLoading: boolean;
-};
-
-const useCurrencyData = (): Context => {
+const useFetchCurrencies = () => {
   const { handleErrors } = useErrors();
 
-  const [isLoading, setLoading] = useState(false);
+  const [isFetching, setFetching] = useState(false);
   const [currencies, setCurrencies] = useState<ICurrency[] | undefined>();
 
   const fetchCurrencies = useCallback(async () => {
-    setLoading(true);
-    api
+    setFetching(true);
+    await api
       .get('/currencies')
       .then(response => setCurrencies(response.data))
       .catch(err => handleErrors('Error when fetching user settings', err))
-      .finally(() => setLoading(false));
+      .finally(() => setFetching(false));
   }, [handleErrors]);
 
-  useEffect(() => {
-    fetchCurrencies();
-  }, [fetchCurrencies]);
+  const replaceCurrency = (currency: ICurrency) => {
+    setCurrencies(
+      currencies && currencies.map(c => (c.id === currency.id ? currency : c)),
+    );
+  };
 
   return {
     currencies,
-    isLoading,
+    isFetching,
+    fetchCurrencies,
+    replaceCurrency,
   };
 };
 
-export default useCurrencyData;
+export default useFetchCurrencies;

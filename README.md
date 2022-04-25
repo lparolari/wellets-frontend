@@ -3,16 +3,16 @@
     <div>
       <h1 style="color: #68d391">Wellets</h1>
     </div>
-    <img src="https://github.com/stemDaniel/wellets-frontend/raw/master/src/Assets/Icons/wallet.svg" width="100" height="100">
+    <img src="https://github.com/lparolari/wellets-frontend/raw/master/src/Assets/Icons/wallet.svg" width="100" height="100">
   </a>
   <br>
   <br>
   <div>
-    <a href="https://img.shields.io/github/v/tag/stemDaniel/wellets-frontend?color=%2368d391&include_prereleases&style=for-the-badge">
-      <img src="https://img.shields.io/github/v/tag/stemDaniel/wellets-frontend?color=%2368d391&include_prereleases&style=for-the-badge">
+    <a href="https://github.com/lparolari/wellets-frontend/tags/">
+      <img src="https://img.shields.io/github/v/tag/lparolari/wellets-frontend?color=%2368d391&include_prereleases&style=for-the-badge">
     </a>
-    <a href="https://img.shields.io/github/license/stemDaniel/wellets-frontend?color=%2368d391&style=for-the-badge">
-      <img src="https://img.shields.io/github/license/stemDaniel/wellets-frontend?color=%2368d391&style=for-the-badge">
+    <a href="https://github.com/lparolari/wellets-frontend/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/lparolari/wellets-frontend?color=%2368d391&style=for-the-badge">
     </a>
   </div>
   <hr>
@@ -20,11 +20,23 @@
 
 ## Introduction
 
-[Wellets](https://wellets.ondaniel.com.br/) is a financial management website that helps users to manage their money placed in multiple portfolios.
+[Wellets](https://wellets-frontend-pi.vercel.app/) is a financial management website that helps users to manage their money placed in multiple portfolios.
 It was developed with a focus on users engaged in the crypto world. These users usually have money on their bank accounts, exchanges, blockchain wallets and stuff like that. As there are a lots of places to put their money, it is easy to gets confused with their own money.
 To avoid that, [Wellets](https://wellets.ondaniel.com.br/) currently provide wallet and currency management features to help users control their money with more accurately.
 
 ADVICE: [Wellets](https://wellets.ondaniel.com.br/) does not have any type of integration with bank accounts or blockchain wallets, all management is done manually. The benefit of using this is the user experience and practicality, but the user needs to specify their transfers and transactions to see the power of the application.
+
+![Wallets](docs/screenshots/wallets.png)
+
+![Bitcoin wallet's transactions](docs/screenshots/transactions.png)
+
+![Bitcoin wallet's Transfers](docs/screenshots/transfers.png)
+
+![Main portfolio](docs/screenshots/main-portfolio.png)
+
+![Portfolio rebalance](docs/screenshots/portfolio-rebalance.png)
+
+![Currencies](docs/screenshots/currencies.png)
 
 ## Back-end
 

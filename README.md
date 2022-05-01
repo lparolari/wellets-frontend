@@ -3,73 +3,190 @@
     <div>
       <h1 style="color: #68d391">Wellets</h1>
     </div>
-    <img src="https://github.com/stemDaniel/wellets-frontend/raw/master/src/Assets/Icons/wallet.svg" width="100" height="100">
+    <img src="https://github.com/lparolari/wellets-frontend/raw/master/src/Assets/Icons/wallet.svg" width="100" height="100">
   </a>
   <br>
   <br>
   <div>
-    <a href="https://img.shields.io/github/v/tag/stemDaniel/wellets-frontend?color=%2368d391&include_prereleases&style=for-the-badge">
-      <img src="https://img.shields.io/github/v/tag/stemDaniel/wellets-frontend?color=%2368d391&include_prereleases&style=for-the-badge">
+    <a href="https://github.com/lparolari/wellets-frontend/tags/">
+      <img src="https://img.shields.io/github/v/tag/lparolari/wellets-frontend?color=%2368d391&include_prereleases&style=for-the-badge">
     </a>
-    <a href="https://img.shields.io/github/license/stemDaniel/wellets-frontend?color=%2368d391&style=for-the-badge">
-      <img src="https://img.shields.io/github/license/stemDaniel/wellets-frontend?color=%2368d391&style=for-the-badge">
+    <a href="https://github.com/lparolari/wellets-frontend/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/lparolari/wellets-frontend?color=%2368d391&style=for-the-badge">
     </a>
   </div>
   <hr>
 </div>
 
+## Table of Contents
+
+  * [Introduction](#introduction)
+  * [Demo](#demo)
+  * [Screenshots](#screenshots)
+  * [Features](#features)
+  * [Usage](#usage)
+  * [Development](#development)
+    * [Install](#install)
+    * [Run](#run)
+    * [Build](#build)
+  * [Contribute](#contribute)
+  * [Related works](#related-works)
+  * [FAQ](#faq)
+    * [Why is Wellets a fork?](#why-is-wellets-a-fork)
+    * [Why there is no integration with back accounts or blockchain wallets?](#why-there-is-no-integration-with-back-accounts-or-blockchain-wallets)
+  * [Author](#author)
+  * [Credits](#credits)
+  * [License](#license)
+
 ## Introduction
 
-[Wellets](https://wellets.ondaniel.com.br/) is a financial management website that helps users to manage their money placed in multiple portfolios.
-It was developed with a focus on users engaged in the crypto world. These users usually have money on their bank accounts, exchanges, blockchain wallets and stuff like that. As there are a lots of places to put their money, it is easy to gets confused with their own money.
-To avoid that, [Wellets](https://wellets.ondaniel.com.br/) currently provide wallet and currency management features to help users control their money with more accurately.
+<!-- Keep track, monitor and manage your crypto with
+[Wellets](https://wellets-frontend-pi.vercel.app/).  -->
 
-ADVICE: [Wellets](https://wellets.ondaniel.com.br/) does not have any type of integration with bank accounts or blockchain wallets, all management is done manually. The benefit of using this is the user experience and practicality, but the user needs to specify their transfers and transactions to see the power of the application.
+*Wellets* is a crypto-oriented financial management tool that allows you to keep
+under control your money. 
 
-## Back-end
+> Please note that Wellets does not have (for now) any type of integration with
+> blockchain wallets, all management is done manually.
 
-This repository contains the code related to [Wellets Front-end](https://github.com/stemDaniel/wellets-frontend). If you want to see the back-end repository, please check [Wellets Back-end](https://github.com/stemDaniel/wellets-backend).
+## Demo
+
+Try it out at [https://wellets-frontend-pi.vercel.app/](https://wellets-frontend-pi.vercel.app/) 🚀
+
+## Screenshots
+
+![Wallets](docs/screenshots/wallets.png)
+
+![Bitcoin wallet's transactions](docs/screenshots/transactions.png)
+
+![Bitcoin wallet's Transfers](docs/screenshots/transfers.png)
+
+![Main portfolio](docs/screenshots/main-portfolio.png)
+
+![Portfolio rebalance](docs/screenshots/portfolio-rebalance.png)
+
+![Currencies](docs/screenshots/currencies.png)
 
 ## Features
 
-- Sign up
-- Sign in
-- Sign out
-- Wallets CRUD
-- View sum of balances of all wallets on a specific currency
-- Create transactions and transfers
-- View transaction and transfer history
-- Custom currencies CRUD
-- And more!
+* **Track incoming/outcoming transactions**. You can register incoming and
+  outcoming transactions to a wallet. This allows you to keep control of your
+  funds.
 
-If [Wellets](https://wellets.ondaniel.com.br/) currently does not have a certain feature you think it is awesome, be sure to check out the [roadmap](https://www.notion.so/Wellets-public-roadmap-d5e4445d9cc0441694c246904979e5bb) to see if this is already planned for the future. Otherwise, you can contact me by any contact method listed in my [Github Profile](https://github.com/stemDaniel) to send your ideas.
+* **Track transfers between wallets**. You can manage transfers between your
+  wallets in order to completely control your funds.
 
-## How to run
+* **Show wallet history**. Given a wallet, you can view the wallet's balance
+  history with different granularity: 1 hour, 1 day, 1 week, 1 month, 1 year.
 
-1. Install project dependencies:
+* **Show wallet total balance**. Given a wallet, you can view its the total
+  balance and countervalue in a desired currency.
 
-   `npm install` or `yarn install`
+* **Show wallet average load price**. Given a wallet, you can view the average
+  load price against the wallet's currency.
 
-2. Run project:
+* **Manage logical aggregation of wallets: portfolios**. A portfolio is a set of
+  wallets with few extra properties: it may have one parent; zero, one, or more
+  children; and a weight. The weight of a portfolio represents its impact among
+  its siblings. 
 
-   `npm run dev` or `yarn dev`
+* **See total balance of a portfolio**. Given a portfolio, you can view its the
+  total balance and countervalue in a desired currency.
 
-## How to build
+* **Rebalance portfolios**. Rebalancing is the process of realigning the
+  weightings of a portfolio of assets (See [Rebalancing -
+  Investopedia](https://www.investopedia.com/terms/r/rebalancing.asp)). Given a
+  portfolio, Wellets is able to rebalance its children in order to maintain an
+  original or desired level of asset allocation or risk.
 
-1. Generate `build` folder:
+* **Show up-to-date countervalues in your preferred currency**. You can set your
+  preferred currency and the system will automatically dispay countervalues in
+  the given currency.
 
-   `npm run build` or `yarn build`
+If you want to send me a pull request or share some ideas please see Sec.
+[Contribute](#contribute).
 
-2. You can serve the `build` using any cli server like [forever](https://www.npmjs.com/package/forever)
+## Usage
 
-## How to contribute
+```
+docker-compose TBD
+```
 
-If you want to contribute with me to improve it and add new features, you can contact me by any contact method listed in my [Github Profile](https://github.com/stemDaniel).
+## Development
+
+### Install
+
+```bash
+# Clone the repository
+git clone git@github.com:lparolari/wellets-frontend.git
+cd wellets-frontend
+
+# Install project dependencies
+yarn install
+```
+
+Also, you require to install
+[wellets-backend](https://github.com/lparolari/wellets-backend). Please refere
+to their [instructions](https://github.com/lparolari/wellets-backend#readme).
+
+### Run
+
+```bash
+yarn start
+```
+
+Also, you require to run
+[wellets-backend](https://github.com/lparolari/wellets-backend). Please refere
+to their [instructions](https://github.com/lparolari/wellets-backend#readme).
+
+### Build
+
+```
+yarn build
+```
+
+## Contribute
+
+Any type of help is really appreciated. If you want to push me some changes, please
+
+* fork the repository;
+* develop your feature in a new branch:
+* open a pull request;
+
+otherwise, just leave an
+[issue](https://github.com/lparolari/wellets-backend/issues) or [contact
+me](https://t.me/lparolari).
+
+## Related works
+
+* [Wellets frontend](https://github.com/lparolari/wellets-frontend) (this repository)
+* [Wellets backend](https://github.com/lparolari/wellets-backend)
+* [Wellets docs](https://github.com/lparolari/wellets-docs) (work in progress)
+
+## FAQ
+
+### Why is Wellets a fork?
+
+The original author does not actively mantain Wellets, so I decided to fork the project and to keep on the development.
+
+### Why there is no integration with back accounts or blockchain wallets?
+
+We simple decided to dedicate our effor in developing financial and money
+management tools instead of integrations with different chains.
+
+## Author
+
+**Luca Parolari**
+
+* Telegram: [@lparolari](https://t.me/lparolari)
+* Github: [@lparolari](https://github.com/lparolari)
+* Email: [luca.parolari23@gmail.com](mailto:luca.parolari23@gmail.com)
 
 ## Credits
 
-Thanks [Unform](https://github.com/unform/unform) and [Chakra UI](https://chakra-ui.com/)!
+* [Daniel Oliveira](https://github.com/ondanieldev), the original creator of
+  this project.
 
 ## License
 
-MIT © [Daniel Oliveira](https://homepages.dcc.ufmg.br/~oliveiradaniel/)
+MIT © [Luca Parolari](https://github.com/lparolari)

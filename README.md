@@ -24,6 +24,7 @@
   * [Demo](#demo)
   * [Screenshots](#screenshots)
   * [Features](#features)
+  * [Core concepts](#core-concepts)
   * [Usage](#usage)
   * [Development](#development)
     * [Install](#install)
@@ -106,6 +107,43 @@ Try it out at [https://wellets-frontend-pi.vercel.app/](https://wellets-frontend
 If you want to send me a pull request or share some ideas please see Sec.
 [Contribute](#contribute).
 
+## Core concepts
+
+### Wallet
+
+**Def.** A wallet is a simple way to assign a name to the pair *(balance,
+asset)*, with the semantic "I have *balance* of *asset*". (See [Asset](#asset)).
+Each wallet has a list of transactions. (See [Transaction](#transaction)).
+
+### Asset
+
+**Def.** An asset is something valuable wrt a base currency. Some examples of
+assets are: currencies (USD, EUR, ...), coins (Bitcoin, Ether, ...), tokens,
+NFTs.
+
+### Transaction
+
+**Def.** A transaction represents a movement of funds wrt to a wallet. Each
+transaction convoy two main information:
+
+* value, i.e., the amount of assets moved: a number whose measure unit is the
+  wallet's asset. Please note that positive value means an incoming transaction,
+  while negative value an outcoming transaction;
+
+* dollar rate, i.e., the ratio between one dollar and the exchange value of 1
+  unit of wallet's asset at the time of creation 
+
+Note: Transactions are the unique way to mutate the wallet's *balance*.\*
+
+\*At time of writing, there is another edge case that allows to mutate the
+balance directly: the wallet creation. However, we plan to remove this. ([#30 at
+wellets-backend](https://github.com/lparolari/wellets-backend/issues/30)). 
+
+### Portfolio
+
+**Def.** A portfolio is a (eventually empty) collection of wallets. Each
+portfolio may have one parent portfolio.
+
 ## Usage
 
 ```
@@ -169,7 +207,7 @@ me](https://t.me/lparolari).
 
 The original author does not actively mantain Wellets, so I decided to fork the project and to keep on the development.
 
-### Why there is no integration with back accounts or blockchain wallets?
+### Why there is no integration with bacn accounts or blockchain wallets?
 
 We simple decided to dedicate our effor in developing financial and money
 management tools instead of integrations with different chains.
